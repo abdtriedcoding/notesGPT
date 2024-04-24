@@ -4,6 +4,7 @@ import { Poppins } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 
 import Navbar from "@/components/navbar";
+import Footer from "@/components/footer";
 
 const font = Poppins({ subsets: ["latin"], weight: ["500"] });
 
@@ -28,7 +29,8 @@ export default function RootLayout({
         >
           <div className="h-full">
             <Navbar />
-            <main className="min-h-[calc(100vh-64px)] p-4">{children}</main>
+            <main className="min-h-[calc(100vh-129px)] p-4">{children}</main>
+            <Footer />
           </div>
         </ThemeProvider>
       </body>
