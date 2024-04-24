@@ -16,13 +16,7 @@ export default function Navbar() {
       {pathname !== "/" && (
         <div className="hidden items-center gap-6 md:flex">
           {navItems?.map((item, index) => (
-            <Link
-              key={index}
-              href={item.href}
-              className="text-lg font-medium text-foreground/60 transition-colors hover:text-foreground/80 sm:text-sm"
-            >
-              {item.title}
-            </Link>
+            <NavItem key={index} {...item} />
           ))}
         </div>
       )}
@@ -39,6 +33,17 @@ function Logo() {
     <Link href="/" className="flex items-center space-x-2">
       <StickyNote className="w-7 h-7" />
       <span className="inline-block text-xl font-bold">NotesGPT</span>
+    </Link>
+  );
+}
+
+function NavItem({ title, href }: { title: string; href: string }) {
+  return (
+    <Link
+      href={href}
+      className="text-lg font-medium text-foreground/60 transition-colors hover:text-foreground/80 sm:text-sm"
+    >
+      {title}
     </Link>
   );
 }
