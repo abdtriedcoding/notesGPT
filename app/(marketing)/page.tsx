@@ -4,6 +4,7 @@ import { Twitter } from "lucide-react";
 import Balancer from "react-wrap-balancer";
 import { Button, buttonVariants } from "@/components/ui/button";
 import MarketingBentoGrid from "./_component/marketing-bentogrid";
+import { HeroHighlightSection } from "./_component/hero-highlight-section";
 
 const MarketingPage = () => {
   return (
@@ -53,6 +54,7 @@ const MarketingPage = () => {
           </div>
         </div>
         <MarketingBentoGrid />
+        <HeroHighlightSection />
       </section>
     </>
   );
