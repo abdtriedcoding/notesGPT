@@ -5,6 +5,7 @@ import { navItems } from "@/constants";
 import { StickyNote } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -25,8 +26,9 @@ export default function Navbar() {
           ))}
         </div>
       )}
-      <div className="ml-auto">
+      <div className="ml-auto flex items-center space-x-4">
         <UserNav />
+        <ThemeToggle />
       </div>
     </nav>
   );
