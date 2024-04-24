@@ -3,6 +3,7 @@ import Image from "next/image";
 import { Twitter } from "lucide-react";
 import Balancer from "react-wrap-balancer";
 import { Button, buttonVariants } from "@/components/ui/button";
+import MarketingBentoGrid from "./_component/marketing-bentogrid";
 
 const MarketingPage = () => {
   return (
@@ -51,6 +52,7 @@ const MarketingPage = () => {
             />
           </div>
         </div>
+        <MarketingBentoGrid />
       </section>
     </>
   );
