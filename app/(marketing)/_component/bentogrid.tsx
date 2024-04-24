@@ -1,21 +1,17 @@
 "use client";
 
 import React from "react";
-import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { BentoGrid, BentoGridItem } from "./bento-grid";
 import {
   Box,
   CheckCircle,
-  Copy,
   File,
   Frown,
   Goal,
   Lightbulb,
   Mic,
-  Signal,
-  Table,
   User,
   XCircle,
 } from "lucide-react";

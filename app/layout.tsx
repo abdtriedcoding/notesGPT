@@ -27,9 +27,11 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <Navbar />
-          <main className="min-h-[calc(100vh-129px)] p-4">{children}</main>
-          <Footer />
+          <div className="min-h-screen">
+            <Navbar />
+            <main className="min-h-[calc(100vh-129px)] p-4">{children}</main>
+            <Footer />
+          </div>
         </ThemeProvider>
       </body>
     </html>

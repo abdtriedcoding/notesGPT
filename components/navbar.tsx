@@ -11,7 +11,7 @@ export default function Navbar() {
   const pathname = usePathname();
 
   return (
-    <nav className="sticky inset-x-0 top-0 z-10 px-4 flex h-16 items-center gap-10 border-b bg-background/60 backdrop-blur-xl transition-all">
+    <nav className="sticky inset-x-0 top-0 z-30 px-4 flex h-16 items-center gap-10 border-b bg-background/60 backdrop-blur-xl transition-all">
       <Logo />
       {pathname !== "/" && (
         <div className="hidden items-center gap-6 md:flex">
