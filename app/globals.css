@@ -2,6 +2,29 @@
 @tailwind components;
 @tailwind utilities;
 
+.recording-box {
+  background: linear-gradient(
+    143deg,
+    #e648f4 8.37%,
+    rgba(73, 80, 240, 0.62) 71.62%
+  );
+  filter: blur(13.100000381469727px);
+}
+
+.record-animation {
+  animation: rotate360 infinite 5s linear;
+}
+
+@keyframes rotate360 {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;

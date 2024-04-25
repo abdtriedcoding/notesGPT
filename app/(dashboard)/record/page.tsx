@@ -1,13 +1,14 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useState } from "react";
+import { formatTime, getCurrentFormattedDate } from "@/lib/utils";
 
 export default function RecordPage() {
   const [isRunning, setIsRunning] = useState(false);
   const [totalSeconds, setTotalSeconds] = useState(0);
   const [mediaRecorder, setMediaRecorder] = useState(null);
   const [title, setTitle] = useState("Record your voice note");
-  const [audioUrl, setAudioUrl] = useState<string | null>(null);
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -21,10 +22,6 @@ export default function RecordPage() {
     return () => clearInterval(interval);
   }, [isRunning]);
 
-  function formatTime(time: number): string {
-    return time < 10 ? `0${time}` : `${time}`;
-  }
-
   async function startRecording() {
     setIsRunning(true);
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -37,9 +34,6 @@ export default function RecordPage() {
 
     recorder.onstop = async () => {
       const audioBlob = new Blob(audioChunks, { type: "audio/mp3" });
-      const url = URL.createObjectURL(audioBlob);
-
-      setAudioUrl(url);
     };
     setMediaRecorder(recorder as any);
     recorder.start();
@@ -62,18 +56,48 @@ export default function RecordPage() {
   };
 
   return (
-    <div className="flex flex-col space-y-4">
-      {title}
-      {audioUrl && (
-        <div>
-          <audio controls src={audioUrl}></audio>
+    <div className="flex flex-col items-center space-y-4">
+      <h1 className="pt-6 text-xl md:pt-12 md:text-4xl font-medium">{title}</h1>
+      <p className="text-gray-400">{getCurrentFormattedDate()}</p>
+      <div className="py-20">
+        <div className="relative mx-auto flex h-[316px] w-[316px] items-center justify-center">
+          <div
+            className={`recording-box absolute h-full w-full rounded-[50%] p-[12%] pt-[17%] ${
+              title === "Recording..." ? "record-animation" : ""
+            }`}
+          >
+            <div
+              className="h-full w-full rounded-[50%]"
+              style={{ background: "linear-gradient(#E31C1CD6, #003EB6CC)" }}
+            />
+          </div>
+          <div className="z-50 flex h-fit w-fit flex-col items-center justify-center">
+            <h1 className="text-[60px] leading-[114.3%] tracking-[-1.5px] text-light">
+              {formatTime(Math.floor(totalSeconds / 60))}:
+              {formatTime(totalSeconds % 60)}
+            </h1>
+          </div>
         </div>
-      )}
+      </div>
       <button onClick={handleRecordClick}>
-        {!isRunning ? "Start Recording" : "Stop Recording"}
+        {!isRunning ? (
+          <Image
+            src={"/nonrecording_mic.svg"}
+            alt="recording mic"
+            width={148}
+            height={148}
+            className="h-[70px] w-[70px] md:h-[100px] md:w-[100px]"
+          />
+        ) : (
+          <Image
+            src={"/recording_mic.svg"}
+            alt="recording mic"
+            width={148}
+            height={148}
+            className="h-[70px] w-[70px] animate-pulse transition md:h-[100px] md:w-[100px]"
+          />
+        )}
       </button>
-      {formatTime(Math.floor(totalSeconds / 60))}:
-      {formatTime(totalSeconds % 60)}
     </div>
   );
 }
