@@ -45,11 +45,12 @@ const MarketingPage = () => {
           </Balancer>
         </p>
         <Button
+          asChild
           size={"lg"}
           className="rounded-lg animate-fade-up opacity-0"
           style={{ animationDelay: "0.4s", animationFillMode: "forwards" }}
         >
-          Get Started
+          <Link href={"/recordings"}>Get Started</Link>
         </Button>
         <div
           className="pt-10 flex items-center justify-center w-full animate-fade-up opacity-0"

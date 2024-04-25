@@ -60,12 +60,16 @@ function UserNav() {
         <Loader className="w5 h-5 animate-spin" />
       </ClerkLoading>
       <SignedOut>
-        <SignInButton mode="modal">
+        <SignInButton
+          fallbackRedirectUrl={"/recordings"}
+          signUpFallbackRedirectUrl={"/recordings"}
+          mode="modal"
+        >
           <Button className="rounded-lg">Sign In</Button>
         </SignInButton>
       </SignedOut>
       <SignedIn>
-        <UserButton />
+        <UserButton afterSignOutUrl="/" />
       </SignedIn>
     </>
   );
