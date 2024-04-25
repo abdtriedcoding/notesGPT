@@ -2,10 +2,17 @@
 
 import Link from "next/link";
 import { navItems } from "@/constants";
-import { StickyNote } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { Loader, StickyNote } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
+import {
+  ClerkLoading,
+  SignInButton,
+  SignedIn,
+  SignedOut,
+  UserButton,
+} from "@clerk/nextjs";
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -15,9 +22,7 @@ export default function Navbar() {
       <Logo />
       {pathname !== "/" && (
         <div className="hidden items-center gap-6 md:flex">
-          {navItems?.map((item, index) => (
-            <NavItem key={index} {...item} />
-          ))}
+          {navItems?.map((item, index) => <NavItem key={index} {...item} />)}
         </div>
       )}
       <div className="ml-auto flex items-center space-x-4">
@@ -50,8 +55,18 @@ function NavItem({ title, href }: { title: string; href: string }) {
 
 function UserNav() {
   return (
-    <Link href="/">
-      <Button className="rounded-lg">Sign In</Button>
-    </Link>
+    <>
+      <ClerkLoading>
+        <Loader className="w5 h-5 animate-spin" />
+      </ClerkLoading>
+      <SignedOut>
+        <SignInButton mode="modal">
+          <Button className="rounded-lg">Sign In</Button>
+        </SignInButton>
+      </SignedOut>
+      <SignedIn>
+        <UserButton />
+      </SignedIn>
+    </>
   );
 }
