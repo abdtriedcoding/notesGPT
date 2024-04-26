@@ -1,16 +1,20 @@
-import { Column } from "@tanstack/react-table";
-
 import { cn } from "@/lib/utils";
+import { Column } from "@tanstack/react-table";
+import { Button } from "@/components/ui/button";
+import {
+  ArrowDownIcon,
+  ArrowUpIcon,
+  ChevronsUpDown,
+  EyeOff,
+  SortAsc,
+} from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ArrowDownIcon, ArrowUpIcon, EyeOff, SortAsc } from "lucide-react";
-import { Button } from "@/components/ui/button";
 
 interface DataTableColumnHeaderProps<TData, TValue>
   extends React.HTMLAttributes<HTMLDivElement> {
@@ -42,7 +46,7 @@ export function DataTableColumnHeader<TData, TValue>({
             ) : column.getIsSorted() === "asc" ? (
               <ArrowUpIcon className="ml-2 h-4 w-4" />
             ) : (
-              <SortAsc className="ml-2 h-4 w-4" />
+              <ChevronsUpDown className="ml-2 h-4 w-4" />
             )}
           </Button>
         </DropdownMenuTrigger>

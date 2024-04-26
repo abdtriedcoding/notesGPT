@@ -1,7 +1,7 @@
 import path from "path";
 import { promises as fs } from "fs";
-import { DataTable } from "./_components/data-table";
 import { columns } from "./_components/columns";
+import { DataTable } from "./_components/data-table";
 
 async function getTasks() {
   const data = await fs.readFile(path.join(process.cwd(), "/tasks.json"));
@@ -16,17 +16,13 @@ export default async function RecordingPage() {
 
   return (
     <>
-      <div className="hidden h-full flex-1 flex-col space-y-8 p-8 md:flex">
-        <div className="flex items-center justify-between space-y-2">
-          <div>
-            <h2 className="text-2xl font-bold tracking-tight">Welcome back!</h2>
-            <p className="text-muted-foreground">
-              Here&apos;s a list of your tasks for this month!
-            </p>
-          </div>
-        </div>
-        <DataTable data={tasks} columns={columns} />
+      <div className="flex flex-col pb-8 items-center space-y-2">
+        <h2 className="text-2xl font-bold tracking-tight">Welcome back!</h2>
+        <p className="text-muted-foreground">
+          Here&apos;s a list of all your notes!
+        </p>
       </div>
+      <DataTable data={tasks} columns={columns} />
     </>
   );
 }
