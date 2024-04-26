@@ -50,7 +50,7 @@ export default function RecordPage() {
       });
       const { storageId } = await result.json();
       let noteId = await create({ storageId });
-      router.push(`/recording/${noteId}`);
+      router.push(`/recordings/${noteId}`);
     };
     setMediaRecorder(recorder as any);
     recorder.start();
