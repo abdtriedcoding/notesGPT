@@ -15,14 +15,15 @@ export const doTranscribe = internalAction({
     noteId: v.id("notes"),
   },
   handler: async (ctx, args) => {
+    const { fileUrl, noteId } = args;
     const data = {
-      audio_url: args.fileUrl,
+      audio_url: fileUrl,
     };
 
     const responce = await client.transcripts.transcribe(data);
     const transcript = responce.text || "error";
     await ctx.runMutation(internal.assembly.saveTranscript, {
-      noteId: args.noteId,
+      noteId,
       transcript,
     });
   },
@@ -38,6 +39,11 @@ export const saveTranscript = internalMutation({
 
     await ctx.db.patch(noteId, {
       transcription: transcript,
+    });
+
+    await ctx.scheduler.runAfter(0, internal.gemini.chat, {
+      noteId,
+      transcript,
     });
   },
 });

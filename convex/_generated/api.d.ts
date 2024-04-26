@@ -15,6 +15,7 @@ import type {
   FunctionReference,
 } from "convex/server";
 import type * as assembly from "../assembly.js";
+import type * as gemini from "../gemini.js";
 import type * as notes from "../notes.js";
 
 /**
@@ -27,6 +28,7 @@ import type * as notes from "../notes.js";
  */
 declare const fullApi: ApiFromModules<{
   assembly: typeof assembly;
+  gemini: typeof gemini;
   notes: typeof notes;
 }>;
 export declare const api: FilterApi<
