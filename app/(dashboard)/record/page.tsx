@@ -2,13 +2,21 @@
 
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { formatTime, getCurrentFormattedDate } from "@/lib/utils";
 
+import { useMutation } from "convex/react";
+import { api } from "@/convex/_generated/api";
+
 export default function RecordPage() {
+  const router = useRouter();
   const [isRunning, setIsRunning] = useState(false);
   const [totalSeconds, setTotalSeconds] = useState(0);
   const [mediaRecorder, setMediaRecorder] = useState(null);
   const [title, setTitle] = useState("Record your voice note");
+
+  const generateUploadUrl = useMutation(api.notes.generateUploadUrl);
+  const create = useMutation(api.notes.create);
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -34,6 +42,15 @@ export default function RecordPage() {
 
     recorder.onstop = async () => {
       const audioBlob = new Blob(audioChunks, { type: "audio/mp3" });
+      const postUrl = await generateUploadUrl();
+      const result = await fetch(postUrl, {
+        method: "POST",
+        headers: { "Content-Type": "audio/mp3" },
+        body: audioBlob,
+      });
+      const { storageId } = await result.json();
+      let noteId = await create({ storageId });
+      router.push(`/recording/${noteId}`);
     };
     setMediaRecorder(recorder as any);
     recorder.start();
