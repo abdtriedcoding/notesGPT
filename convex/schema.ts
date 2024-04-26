@@ -9,5 +9,5 @@ export default defineSchema({
     title: v.optional(v.string()),
     transcription: v.optional(v.string()),
     summary: v.optional(v.string()),
-  }),
+  }).index("by_userId", ["userId"]),
 });

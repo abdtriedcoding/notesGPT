@@ -1,40 +1,23 @@
 "use client";
 
+import { formatDate } from "@/lib/utils";
 import { ColumnDef } from "@tanstack/react-table";
-import { Checkbox } from "@/components/ui/checkbox";
+import { Id } from "@/convex/_generated/dataModel";
 import { DataTableRowActions } from "./data-table-row-actions";
 import { DataTableColumnHeader } from "./data-table-column-header";
 
-interface Task {
-  title: string;
-  date: string;
+interface Note {
+  _creationTime: number;
+  _id: Id<"notes">;
+  audioFileId: string;
+  audioFileUrl: string;
+  summary?: string;
+  title?: string;
+  transcription?: string;
+  userId: string;
 }
 
-export const columns: ColumnDef<Task>[] = [
-  {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-        className="translate-y-[2px]"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-        className="translate-y-[2px]"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
+export const columns: ColumnDef<Note>[] = [
   {
     accessorKey: "title",
     header: ({ column }) => (
@@ -49,12 +32,16 @@ export const columns: ColumnDef<Task>[] = [
     },
   },
   {
-    accessorKey: "date",
+    accessorKey: "_creationTime",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Date" />
     ),
     cell: ({ row }) => {
-      return <span className="font-medium">{row.getValue("date")}</span>;
+      return (
+        <span className="font-medium">
+          {formatDate(row.getValue("_creationTime"))}
+        </span>
+      );
     },
   },
   {

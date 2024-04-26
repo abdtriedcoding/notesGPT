@@ -1,18 +1,12 @@
-import path from "path";
-import { promises as fs } from "fs";
+"use client";
+
+import { useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
 import { columns } from "./_components/columns";
 import { DataTable } from "./_components/data-table";
 
-async function getTasks() {
-  const data = await fs.readFile(path.join(process.cwd(), "/tasks.json"));
-
-  const tasks = JSON.parse(data.toString());
-
-  return tasks;
-}
-
-export default async function RecordingPage() {
-  const tasks = await getTasks();
+export default function RecordingPage() {
+  const userNotes = useQuery(api.notes.getUserNotes);
 
   return (
     <>
@@ -22,7 +16,7 @@ export default async function RecordingPage() {
           Here&apos;s a list of all your notes!
         </p>
       </div>
-      <DataTable data={tasks} columns={columns} />
+      <DataTable data={userNotes ?? []} columns={columns} />
     </>
   );
 }
