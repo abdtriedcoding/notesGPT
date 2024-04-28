@@ -82,3 +82,34 @@ export const getNoteById = query({
     return note;
   },
 });
+
+export const createAction = mutation({
+  args: {
+    noteId: v.id("notes"),
+    action: v.string(),
+  },
+  handler: async (ctx, { noteId, action }) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Not authenticated");
+    }
+
+    const userId = identity.subject;
+
+    const note = await ctx.db.get(noteId);
+    if (!note) {
+      throw new Error("Not found");
+    }
+
+    if (note.userId !== userId) {
+      throw new Error("Unauthorized");
+    }
+
+    const promise = await ctx.db.insert("actionItems", {
+      userId,
+      noteId,
+      action,
+    });
+    return promise;
+  },
+});

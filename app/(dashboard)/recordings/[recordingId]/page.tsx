@@ -1,18 +1,22 @@
 "use client";
 
-import { useQuery } from "convex/react";
+import { useState } from "react";
 import { useParams } from "next/navigation";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
+import { useMutation, useQuery } from "convex/react";
+
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 
 export default function RecordingIdPage() {
   const params = useParams();
   const { recordingId } = params;
+  const [input, setInput] = useState("");
+  const createAction = useMutation(api.notes.createAction);
 
   const note = useQuery(api.notes.getNoteById, {
     id: recordingId as Id<"notes">,
@@ -21,6 +25,11 @@ export default function RecordingIdPage() {
   if (note === null) {
     return null;
   }
+
+  const handleCreateAction = async () => {
+    if (!input) return;
+    await createAction({ noteId: note?._id as Id<"notes">, action: input });
+  };
 
   return (
     <>
@@ -34,8 +43,13 @@ export default function RecordingIdPage() {
         <TabsContent value="summary">{note?.summary}</TabsContent>
         <TabsContent className="space-y-4" value="actionItem">
           <div className="flex w-full items-center space-x-2">
-            <Input type="text" placeholder="Add action for this task..." />
-            <Button type="submit">Add Action</Button>
+            <Input
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              type="text"
+              placeholder="Add action for this note..."
+            />
+            <Button onClick={handleCreateAction}>Add Action</Button>
           </div>
           <Card>
             <CardContent className="flex space-x-4 items-center">

@@ -13,7 +13,7 @@ export default defineSchema({
   actionItems: defineTable({
     noteId: v.id("notes"),
     userId: v.string(),
-    task: v.string(),
+    action: v.string(),
   })
     .index("by_noteId", ["noteId"])
     .index("by_userId", ["userId"]),
