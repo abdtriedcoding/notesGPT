@@ -2,10 +2,11 @@
 
 import { toast } from "sonner";
 import { useState } from "react";
+import { formatDate } from "@/lib/utils";
 import { useParams } from "next/navigation";
 import { api } from "@/convex/_generated/api";
-import { Id } from "@/convex/_generated/dataModel";
 import { useMutation, useQuery } from "convex/react";
+import { Doc, Id } from "@/convex/_generated/dataModel";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -13,19 +14,26 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
+interface NoteWithActionItem {
+  note: Doc<"notes">;
+  actionItems: Doc<"actionItems">[];
+}
+
 export default function RecordingIdPage() {
   const params = useParams();
   const { recordingId } = params;
   const [input, setInput] = useState("");
   const createAction = useMutation(api.notes.createAction);
 
-  const note = useQuery(api.notes.getNoteById, {
+  const noteWithActionItems = useQuery(api.notes.getNoteById, {
     id: recordingId as Id<"notes">,
   });
 
-  if (note === null) {
+  if (!noteWithActionItems?.note) {
     return null;
   }
+
+  const { note, actionItems }: NoteWithActionItem = noteWithActionItems;
 
   const handleCreateAction = () => {
     if (!input.trim()) {
@@ -34,13 +42,14 @@ export default function RecordingIdPage() {
 
     const promise = createAction({
       noteId: note?._id as Id<"notes">,
-      action: input,
+      action: input.trim(),
     });
     toast.promise(promise, {
       loading: "Creating Action...",
       success: "Action Created",
       error: " Failed to create action.",
     });
+    setInput("");
   };
 
   return (
@@ -63,12 +72,17 @@ export default function RecordingIdPage() {
             />
             <Button onClick={handleCreateAction}>Add Action</Button>
           </div>
-          <Card>
-            <CardContent className="flex space-x-4 items-center">
-              <Checkbox />
-              <p>TODO: Work in progress in this part!!</p>
-            </CardContent>
-          </Card>
+          {actionItems.map((item) => (
+            <Card key={item._id}>
+              <CardContent className="flex space-x-4 items-center justify-between">
+                <div className="flex items-center space-x-4">
+                  <Checkbox />
+                  <p>{item.action}</p>
+                </div>
+                <p className="ml-auto">{formatDate(item._creationTime)}</p>
+              </CardContent>
+            </Card>
+          ))}
         </TabsContent>
       </Tabs>
     </>

@@ -79,7 +79,13 @@ export const getNoteById = query({
       throw new Error("Unauthorized");
     }
 
-    return note;
+    const actionItems = await ctx.db
+      .query("actionItems")
+      .withIndex("by_noteId", (q) => q.eq("noteId", note._id))
+      .order("desc")
+      .collect();
+
+    return { note, actionItems };
   },
 });
 
