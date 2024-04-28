@@ -1,5 +1,6 @@
 import "./globals.css";
 import type { Metadata } from "next";
+import { Toaster, toast } from "sonner";
 import { Poppins } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import { ConvexProvider } from "@/components/providers/convex-provider";
@@ -31,7 +32,10 @@ export default function RootLayout({
           >
             <div className="min-h-screen">
               <Navbar />
-              <main className="min-h-[calc(100vh-129px)] p-4">{children}</main>
+              <main className="min-h-[calc(100vh-129px)] p-4">
+                {children}
+                <Toaster theme="system" richColors />
+              </main>
               <Footer />
             </div>
           </ThemeProvider>

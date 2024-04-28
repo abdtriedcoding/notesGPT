@@ -1,5 +1,6 @@
 "use client";
 
+import { toast } from "sonner";
 import { useState } from "react";
 import { useParams } from "next/navigation";
 import { api } from "@/convex/_generated/api";
@@ -26,9 +27,20 @@ export default function RecordingIdPage() {
     return null;
   }
 
-  const handleCreateAction = async () => {
-    if (!input) return;
-    await createAction({ noteId: note?._id as Id<"notes">, action: input });
+  const handleCreateAction = () => {
+    if (!input.trim()) {
+      return toast.error("Input is empty");
+    }
+
+    const promise = createAction({
+      noteId: note?._id as Id<"notes">,
+      action: input,
+    });
+    toast.promise(promise, {
+      loading: "Creating Action...",
+      success: "Action Created",
+      error: " Failed to create action.",
+    });
   };
 
   return (
