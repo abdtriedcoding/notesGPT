@@ -46,6 +46,9 @@ export const columns: ColumnDef<Note>[] = [
   },
   {
     id: "actions",
-    cell: () => <DataTableRowActions />,
+    cell: ({ row }) => {
+      const { _id } = row.original;
+      return <DataTableRowActions id={_id} />;
+    },
   },
 ];

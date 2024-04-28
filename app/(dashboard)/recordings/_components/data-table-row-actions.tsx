@@ -8,9 +8,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Ellipsis } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { Id } from "@/convex/_generated/dataModel";
 
-export function DataTableRowActions() {
+export function DataTableRowActions({ id }: { id: Id<"notes"> }) {
+  const router = useRouter();
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -23,7 +27,9 @@ export function DataTableRowActions() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[160px]">
-        <DropdownMenuItem>Edit</DropdownMenuItem>
+        <DropdownMenuItem onClick={() => router.push(`/recordings/${id}`)}>
+          Edit
+        </DropdownMenuItem>
         <DropdownMenuItem>Favorite</DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem>Delete</DropdownMenuItem>
