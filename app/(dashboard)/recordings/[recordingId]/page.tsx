@@ -7,6 +7,8 @@ import { Id } from "@/convex/_generated/dataModel";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 export default function RecordingIdPage() {
   const params = useParams();
@@ -30,7 +32,11 @@ export default function RecordingIdPage() {
         </TabsList>
         <TabsContent value="transcript">{note?.title}</TabsContent>
         <TabsContent value="summary">{note?.summary}</TabsContent>
-        <TabsContent value="actionItem">
+        <TabsContent className="space-y-4" value="actionItem">
+          <div className="flex w-full items-center space-x-2">
+            <Input type="text" placeholder="Add action for this task..." />
+            <Button type="submit">Add Action</Button>
+          </div>
           <Card>
             <CardContent className="flex space-x-4 items-center">
               <Checkbox />

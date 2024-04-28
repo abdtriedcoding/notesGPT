@@ -10,4 +10,11 @@ export default defineSchema({
     transcription: v.optional(v.string()),
     summary: v.optional(v.string()),
   }).index("by_userId", ["userId"]),
+  actionItems: defineTable({
+    noteId: v.id("notes"),
+    userId: v.string(),
+    task: v.string(),
+  })
+    .index("by_noteId", ["noteId"])
+    .index("by_userId", ["userId"]),
 });
