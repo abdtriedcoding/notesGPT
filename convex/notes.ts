@@ -119,3 +119,31 @@ export const createAction = mutation({
     return promise;
   },
 });
+
+export const getActionItems = query({
+  handler: async (ctx) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Not authenticated");
+    }
+
+    const userId = identity.subject;
+
+    const actionItems = await ctx.db
+      .query("actionItems")
+      .withIndex("by_userId", (q) => q.eq("userId", userId))
+      .collect();
+
+    let modifiedActionItems = [];
+    for (let item of actionItems) {
+      const note = await ctx.db.get(item.noteId);
+      if (!note) continue;
+      modifiedActionItems.push({
+        ...item,
+        title: note.title,
+      });
+    }
+
+    return modifiedActionItems;
+  },
+});
