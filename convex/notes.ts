@@ -132,6 +132,7 @@ export const getActionItems = query({
     const actionItems = await ctx.db
       .query("actionItems")
       .withIndex("by_userId", (q) => q.eq("userId", userId))
+      .order("desc")
       .collect();
 
     let modifiedActionItems = [];
