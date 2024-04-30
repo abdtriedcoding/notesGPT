@@ -22,11 +22,29 @@ export function TableSkelton() {
 
 export function CardSkelton() {
   return (
-    <div className="space-y-4 max-w-xl mx-auto">
+    <div className="space-y-4 max-w-xl mx-auto items-center flex flex-col">
+      <Skeleton className="rounded-lg border h-7 w-[200px]" />
+      <Skeleton className="rounded-lg border h-5 w-[150px]" />
       <Skeleton className="rounded-lg border h-9 w-full" />
       <Skeleton className="rounded-lg border h-9 w-full" />
       <Skeleton className="rounded-lg border h-9 w-full" />
       <Skeleton className="rounded-lg border h-9 w-full" />
+    </div>
+  );
+}
+
+export function ActionItemSkelton() {
+  return (
+    <div className="space-y-8 max-w-xl mx-auto">
+      <Skeleton className="w-[300px] mx-auto h-[38px]" />
+      <div className="flex flex-col space-y-1">
+        <Skeleton className="w-full h-4" />
+        <Skeleton className="w-full h-4" />
+        <Skeleton className="w-full h-4" />
+        <Skeleton className="w-full h-4" />
+        <Skeleton className="w-full h-4" />
+        <Skeleton className="w-full h-4" />
+      </div>
     </div>
   );
 }

@@ -7,6 +7,7 @@ import { Doc, Id } from "@/convex/_generated/dataModel";
 
 import NoteCard from "./_components/note-card";
 import ActionForm from "./_components/action-form";
+import { ActionItemSkelton } from "@/components/skeltons";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface NoteWithActionItem {
@@ -23,7 +24,7 @@ export default function RecordingIdPage() {
   });
 
   if (noteWithActionItems === undefined) {
-    return <p>Loading...</p>;
+    return <ActionItemSkelton />;
   }
 
   const { note, actionItems }: NoteWithActionItem = noteWithActionItems;
