@@ -2,13 +2,14 @@
 
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
-import NoteCard from "@/app/(dashboard)/recordings/[recordingId]/_components/note-card";
+import { CardSkelton } from "@/components/skeltons";
+import NoteCard from "../recordings/[recordingId]/_components/note-card";
 
 export default function ActionItemsPage() {
   const userActionItems = useQuery(api.notes.getActionItems);
 
   if (userActionItems === undefined) {
-    return <p className="text-center">Loading...</p>;
+    return <CardSkelton />;
   }
 
   return (

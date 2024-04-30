@@ -19,3 +19,14 @@ export function TableSkelton() {
     </>
   );
 }
+
+export function CardSkelton() {
+  return (
+    <div className="space-y-4 max-w-xl mx-auto">
+      <Skeleton className="rounded-lg border h-9 w-full" />
+      <Skeleton className="rounded-lg border h-9 w-full" />
+      <Skeleton className="rounded-lg border h-9 w-full" />
+      <Skeleton className="rounded-lg border h-9 w-full" />
+    </div>
+  );
+}
