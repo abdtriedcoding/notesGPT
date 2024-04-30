@@ -4,9 +4,14 @@ import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { columns } from "./_components/columns";
 import { DataTable } from "./_components/data-table";
+import { TableSkelton } from "@/components/skeltons";
 
 export default function RecordingPage() {
   const userNotes = useQuery(api.notes.getUserNotes);
+
+  if (userNotes === undefined) {
+    return <TableSkelton />;
+  }
 
   return (
     <>
@@ -16,7 +21,7 @@ export default function RecordingPage() {
           Here&apos;s a list of all your notes!
         </p>
       </div>
-      <DataTable data={userNotes ?? []} columns={columns} />
+      <DataTable data={userNotes} columns={columns} />
     </>
   );
 }
