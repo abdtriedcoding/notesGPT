@@ -148,3 +148,31 @@ export const getActionItems = query({
     return modifiedActionItems;
   },
 });
+
+export const removeActionItem = mutation({
+  args: {
+    id: v.id("actionItems"),
+  },
+  handler: async (ctx, args) => {
+    const { id } = args;
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Not authenticated");
+    }
+
+    const actionItem = await ctx.db.get(id);
+
+    if (!actionItem) {
+      throw new Error("Action Item not found");
+    }
+
+    const userId = identity.subject;
+
+    if (actionItem.userId !== userId) {
+      throw new Error("Not your action item");
+    }
+
+    const promise = await ctx.db.delete(id);
+    return promise;
+  },
+});
