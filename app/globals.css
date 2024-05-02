@@ -5,8 +5,8 @@
 .recording-box {
   background: linear-gradient(
     143deg,
-    #FF512F 8.37%,
-    #DD2476 71.62%
+    #e648f4 8.37%,
+    rgba(73, 80, 240, 0.62) 71.62%
   );
   filter: blur(13.100000381469727px);
 }

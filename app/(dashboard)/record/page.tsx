@@ -85,7 +85,7 @@ export default function RecordPage() {
           >
             <div
               className="h-full w-full rounded-[50%]"
-              style={{ background: "linear-gradient(#FF512F, #DD2476)" }}
+              style={{ background: "linear-gradient(#E31C1CD6, #003EB6CC)" }}
             />
           </div>
           <div className="z-20 flex h-fit w-fit flex-col items-center justify-center">

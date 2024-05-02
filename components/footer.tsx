@@ -8,7 +8,7 @@ export default function Footer() {
         <p className="text-center text-sm leading-loose">
           Built by{" "}
           <a
-            href={"/"}
+            href="https://twitter.com/abdtriedcoding"
             target="_blank"
             rel="noreferrer"
             className="font-medium underline underline-offset-4"

@@ -21,7 +21,7 @@ export function HeroHighlightSection() {
         }}
         className="text-2xl px-4 md:text-4xl lg:text-5xl font-bold text-neutral-700 dark:text-white max-w-4xl leading-relaxed lg:leading-snug text-center mx-auto "
       >
-        With NoteGPT, you can easliy organize your notes or task for every{" "}
+        With NotesGPT, you can easliy organize your notes or task for every{" "}
         <Highlight className="text-black dark:text-white">
           day, week, month
         </Highlight>
