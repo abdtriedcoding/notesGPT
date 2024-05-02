@@ -1,9 +1,42 @@
+import { Metadata } from "next";
 import { twMerge } from "tailwind-merge";
 import { auth } from "@clerk/nextjs/server";
 import { type ClassValue, clsx } from "clsx";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
+}
+
+export function constructMetadata({
+  title = "NotesGPT",
+  description = "NotesGPT seamlessly converts your voice notes into organized summaries and clear action items using AI.",
+  image = "/thumbnail.png",
+}: {
+  title?: string;
+  description?: string;
+  image?: string;
+} = {}): Metadata {
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      images: [
+        {
+          url: image,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [image],
+      creator: "@abdtriedcoding",
+    },
+    metadataBase: new URL("https://notesgpt.vercel.app"),
+  };
 }
 
 export function getCurrentFormattedDate(): string {
