@@ -35,7 +35,7 @@ export function constructMetadata({
       images: [image],
       creator: "@abdtriedcoding",
     },
-    metadataBase: new URL("https://notesgpt.vercel.app"),
+    metadataBase: new URL("https://notessgpt.vercel.app"),
   };
 }
 
