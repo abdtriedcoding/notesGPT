@@ -74,7 +74,7 @@ export default function RecordPage() {
 
   return (
     <div className="flex flex-col items-center space-y-4">
-      <h1 className="pt-6 text-xl md:pt-12 md:text-4xl font-medium">{title}</h1>
+      <h1 className="text-xl md:text-4xl font-medium">{title}</h1>
       <p className="text-gray-400">{getCurrentFormattedDate()}</p>
       <div className="py-20">
         <div className="relative mx-auto flex h-[316px] w-[316px] items-center justify-center">
@@ -85,10 +85,10 @@ export default function RecordPage() {
           >
             <div
               className="h-full w-full rounded-[50%]"
-              style={{ background: "linear-gradient(#E31C1CD6, #003EB6CC)" }}
+              style={{ background: "linear-gradient(#FF512F, #DD2476)" }}
             />
           </div>
-          <div className="z-50 flex h-fit w-fit flex-col items-center justify-center">
+          <div className="z-20 flex h-fit w-fit flex-col items-center justify-center">
             <h1 className="text-[60px] leading-[114.3%] tracking-[-1.5px] text-light">
               {formatTime(Math.floor(totalSeconds / 60))}:
               {formatTime(totalSeconds % 60)}

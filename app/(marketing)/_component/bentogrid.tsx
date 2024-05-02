@@ -260,7 +260,7 @@ const SkeletonFive = () => {
       >
         <User className="h-10 w-10" />
         <p className="text-xs text-neutral-500">
-          How can i manage my notes or daily task efficiently ?
+          How can i manage my notes or daily notes efficiently ?
         </p>
       </motion.div>
       <motion.div
@@ -275,7 +275,7 @@ const SkeletonFive = () => {
 };
 const items = [
   {
-    title: "Voice-to-Task Transformation",
+    title: "Voice-to-Notes Transformation",
     description: (
       <span className="text-sm">
         Convert your voice memos into actionable insights effortlessly.
@@ -298,7 +298,7 @@ const items = [
     icon: <File className="h-4 w-4 text-neutral-500" />,
   },
   {
-    title: "Instant Task Generation",
+    title: "Instant Note Generation",
     description: (
       <span className="text-sm">
         Say it, summarize it, do it. Let NotesGPT handle the rest.
@@ -309,7 +309,7 @@ const items = [
     icon: <Lightbulb className="h-4 w-4 text-neutral-500" />,
   },
   {
-    title: "Add Task Setting and Tracking",
+    title: "Add task Setting and Tracking",
     description: (
       <span className="text-sm">
         Add task and track them achieve them faster. Let NotesGPT help you stay
