@@ -2,6 +2,7 @@ import "./globals.css";
 import { Toaster } from "sonner";
 import { Poppins } from "next/font/google";
 import { constructMetadata } from "@/lib/utils";
+import { Analytics } from "@vercel/analytics/react"
 import { ThemeProvider } from "@/components/theme-provider";
 import { ConvexProvider } from "@/components/providers/convex-provider";
 
@@ -30,8 +31,9 @@ export default function RootLayout({
             <div className="min-h-screen">
               <Navbar />
               <main className="min-h-[calc(100vh-129px)] p-4">
-                {children}
                 <Toaster theme="system" richColors />
+                {children}
+                <Analytics />
               </main>
               <Footer />
             </div>
