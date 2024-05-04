@@ -10,7 +10,7 @@ interface TranscriptSummary {
   summary: string;
 }
 
-const genAI = new GoogleGenerativeAI("AIzaSyBu57kJQcpgUi_QNrMZ3pRIvyNsqDl-6xk");
+const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GOOGLE_API_KEY!);
 
 const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 

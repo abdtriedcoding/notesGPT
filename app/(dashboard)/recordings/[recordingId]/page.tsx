@@ -37,7 +37,7 @@ export default function RecordingIdPage() {
           <TabsTrigger value="summary">Summary</TabsTrigger>
           <TabsTrigger value="actionItem">Action Items</TabsTrigger>
         </TabsList>
-        <TabsContent value="transcript">{note?.title}</TabsContent>
+        <TabsContent value="transcript">{note?.transcription}</TabsContent>
         <TabsContent value="summary">{note?.summary}</TabsContent>
         <TabsContent className="space-y-4" value="actionItem">
           <ActionForm id={note._id} />
