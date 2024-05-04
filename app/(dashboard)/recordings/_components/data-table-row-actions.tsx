@@ -11,6 +11,7 @@ import { Ellipsis } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Id } from "@/convex/_generated/dataModel";
+import { DeleteModel } from "@/components/delete-model";
 
 export function DataTableRowActions({ id }: { id: Id<"notes"> }) {
   const router = useRouter();
@@ -32,7 +33,14 @@ export function DataTableRowActions({ id }: { id: Id<"notes"> }) {
         </DropdownMenuItem>
         <DropdownMenuItem>Favorite</DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>Delete</DropdownMenuItem>
+        <DeleteModel>
+          <Button
+            variant={"destructive"}
+            className="w-full text-start justify-start"
+          >
+            Delete
+          </Button>
+        </DeleteModel>
       </DropdownMenuContent>
     </DropdownMenu>
   );

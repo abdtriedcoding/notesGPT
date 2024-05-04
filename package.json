@@ -11,6 +11,7 @@
   "dependencies": {
     "@clerk/nextjs": "^5.0.2",
     "@google/generative-ai": "^0.8.0",
+    "@radix-ui/react-alert-dialog": "^1.0.5",
     "@radix-ui/react-checkbox": "^1.0.4",
     "@radix-ui/react-dialog": "^1.0.5",
     "@radix-ui/react-dropdown-menu": "^2.0.6",
