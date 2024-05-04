@@ -6,7 +6,7 @@ import { internal } from "./_generated/api";
 import { internalAction, internalMutation } from "./_generated/server";
 
 const client = new AssemblyAI({
-  apiKey: process.env.NEXT_PUBLIC_ASSEMBLY_API_KEY!,
+  apiKey: process.env.ASSEMBLY_API_KEY || "",
 });
 
 export const doTranscribe = internalAction({
