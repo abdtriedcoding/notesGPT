@@ -20,7 +20,7 @@ export default function Footer() {
       <p className="text-center text-sm leading-loose">
         Open source for{" "}
         <a
-          href="/"
+          href="https://github.com/abdtriedcoding/notesGPT"
           target="_blank"
           rel="noreferrer"
           className="font-medium underline underline-offset-4"

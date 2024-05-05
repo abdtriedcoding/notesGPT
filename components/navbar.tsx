@@ -1,21 +1,22 @@
 "use client";
 
 import Link from "next/link";
+import UserNav from "./user-nav";
 import { navItems } from "@/constants";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Loader, StickyNote } from "lucide-react";
 import { ThemeToggle } from "@/components/theme-toggle";
 import {
+  ClerkLoaded,
   ClerkLoading,
   SignInButton,
-  SignedIn,
-  SignedOut,
-  UserButton,
+  useUser,
 } from "@clerk/nextjs";
 
 export default function Navbar() {
   const pathname = usePathname();
+  const { user } = useUser();
 
   return (
     <nav className="sticky inset-x-0 top-0 z-30 px-4 flex h-16 items-center gap-10 border-b bg-background/60 backdrop-blur-xl transition-all">
@@ -26,7 +27,24 @@ export default function Navbar() {
         </div>
       )}
       <div className="ml-auto flex items-center space-x-4">
-        <UserNav />
+        {user ? (
+          <UserNav />
+        ) : (
+          <>
+            <ClerkLoading>
+              <Loader className="w5 h-5 animate-spin" />
+            </ClerkLoading>
+            <ClerkLoaded>
+              <SignInButton
+                fallbackRedirectUrl={"/recordings"}
+                signUpFallbackRedirectUrl={"/recordings"}
+                mode="modal"
+              >
+                <Button className="rounded-lg">Sign In</Button>
+              </SignInButton>
+            </ClerkLoaded>
+          </>
+        )}
         <ThemeToggle />
       </div>
     </nav>
@@ -50,27 +68,5 @@ function NavItem({ title, href }: { title: string; href: string }) {
     >
       {title}
     </Link>
-  );
-}
-
-function UserNav() {
-  return (
-    <>
-      <ClerkLoading>
-        <Loader className="w5 h-5 animate-spin" />
-      </ClerkLoading>
-      <SignedOut>
-        <SignInButton
-          fallbackRedirectUrl={"/recordings"}
-          signUpFallbackRedirectUrl={"/recordings"}
-          mode="modal"
-        >
-          <Button className="rounded-lg">Sign In</Button>
-        </SignInButton>
-      </SignedOut>
-      <SignedIn>
-        <UserButton afterSignOutUrl="/" />
-      </SignedIn>
-    </>
   );
 }
