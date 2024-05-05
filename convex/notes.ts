@@ -6,7 +6,7 @@ export const generateUploadUrl = mutation(async (ctx) => {
   return await ctx.storage.generateUploadUrl();
 });
 
-export const create = mutation({
+export const createNote = mutation({
   args: {
     storageId: v.id("_storage"),
   },
@@ -89,7 +89,43 @@ export const getNoteById = query({
   },
 });
 
-export const createAction = mutation({
+export const removeNote = mutation({
+  args: {
+    id: v.id("notes"),
+  },
+  handler: async (ctx, args) => {
+    const { id } = args;
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Not authenticated");
+    }
+
+    const note = await ctx.db.get(id);
+
+    if (!note) {
+      throw new Error("Note not found");
+    }
+
+    const userId = identity.subject;
+
+    if (note.userId !== userId) {
+      throw new Error("Not your note");
+    }
+
+    const actionItems = await ctx.db
+      .query("actionItems")
+      .withIndex("by_noteId", (q) => q.eq("noteId", id))
+      .collect();
+
+    await Promise.all(actionItems.map((item) => ctx.db.delete(item._id)));
+
+    const promise = await ctx.db.delete(id);
+
+    return promise;
+  },
+});
+
+export const createActionItem = mutation({
   args: {
     noteId: v.id("notes"),
     action: v.string(),
@@ -173,42 +209,6 @@ export const removeActionItem = mutation({
     }
 
     const promise = await ctx.db.delete(id);
-    return promise;
-  },
-});
-
-export const removeNote = mutation({
-  args: {
-    id: v.id("notes"),
-  },
-  handler: async (ctx, args) => {
-    const { id } = args;
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) {
-      throw new Error("Not authenticated");
-    }
-
-    const note = await ctx.db.get(id);
-
-    if (!note) {
-      throw new Error("Note not found");
-    }
-
-    const userId = identity.subject;
-
-    if (note.userId !== userId) {
-      throw new Error("Not your note");
-    }
-
-    const actionItems = await ctx.db
-      .query("actionItems")
-      .withIndex("by_noteId", (q) => q.eq("noteId", id))
-      .collect();
-
-    await Promise.all(actionItems.map((item) => ctx.db.delete(item._id)));
-
-    const promise = await ctx.db.delete(id);
-
     return promise;
   },
 });

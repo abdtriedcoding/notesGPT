@@ -9,21 +9,21 @@ import { Button } from "@/components/ui/button";
 
 export default function ActionForm({ id }: { id: Id<"notes"> }) {
   const [input, setInput] = useState("");
-  const createAction = useMutation(api.notes.createAction);
+  const createActionItem = useMutation(api.notes.createActionItem);
 
   const handleCreateAction = () => {
     if (!input.trim()) {
       return toast.error("Input is empty");
     }
 
-    const promise = createAction({
+    const promise = createActionItem({
       noteId: id,
       action: input.trim(),
     });
     toast.promise(promise, {
-      loading: "Creating Action...",
-      success: "Action Created",
-      error: " Failed to create action.",
+      loading: "Creating Action Item...",
+      success: "Action Item Created",
+      error: "Failed to create action item",
     });
     setInput("");
   };

@@ -47,12 +47,11 @@ export function DataTableRowActions({ id }: { id: Id<"notes"> }) {
         <DropdownMenuItem onClick={() => router.push(`/recordings/${id}`)}>
           Edit
         </DropdownMenuItem>
-        <DropdownMenuItem>Favorite</DropdownMenuItem>
         <DropdownMenuSeparator />
         <DeleteModel onConfirm={handelRemoveNote}>
           <Button
             variant={"destructive"}
-            className="w-full text-start justify-start"
+            className="w-full text-start justify-start px-2 py-1.5 text-sm"
           >
             Delete
           </Button>

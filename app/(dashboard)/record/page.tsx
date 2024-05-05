@@ -16,7 +16,7 @@ export default function RecordPage() {
   const [title, setTitle] = useState("Record your voice note");
 
   const generateUploadUrl = useMutation(api.notes.generateUploadUrl);
-  const create = useMutation(api.notes.create);
+  const createNote = useMutation(api.notes.createNote);
 
   useEffect(() => {
     let interval: NodeJS.Timeout;
@@ -49,7 +49,7 @@ export default function RecordPage() {
         body: audioBlob,
       });
       const { storageId } = await result.json();
-      let noteId = await create({ storageId });
+      let noteId = await createNote({ storageId });
       router.push(`/recordings/${noteId}`);
     };
     setMediaRecorder(recorder as any);
