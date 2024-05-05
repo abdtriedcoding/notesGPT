@@ -2,7 +2,7 @@ import "./globals.css";
 import { Toaster } from "sonner";
 import { Poppins } from "next/font/google";
 import { constructMetadata } from "@/lib/utils";
-import { Analytics } from "@vercel/analytics/react"
+import { Analytics } from "@vercel/analytics/react";
 import { ThemeProvider } from "@/components/theme-provider";
 import { ConvexProvider } from "@/components/providers/convex-provider";
 
@@ -28,15 +28,13 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <div className="min-h-screen">
-              <Navbar />
-              <main className="min-h-[calc(100vh-129px)] p-4">
-                <Toaster theme="system" richColors />
-                {children}
-                <Analytics />
-              </main>
-              <Footer />
-            </div>
+            <Navbar />
+            <main className="min-h-screen w-full p-4">
+              <Toaster theme="system" richColors />
+              {children}
+              <Analytics />
+            </main>
+            <Footer />
           </ThemeProvider>
         </body>
       </html>

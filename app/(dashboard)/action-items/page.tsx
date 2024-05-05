@@ -16,7 +16,7 @@ export default function ActionItemsPage() {
 
   if (userActionItems.length === 0)
     return (
-      <div className="text-center space-y-4 min-h-[70vh] justify-center items-center flex flex-col">
+      <div className="text-center space-y-4 min-h-screen justify-center items-center flex flex-col">
         <p className="text-2xl">You currently have no action items.</p>
         <Button asChild size={"lg"}>
           <Link href={"/record"}>Record your first voice note</Link>
