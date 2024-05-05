@@ -12,9 +12,10 @@ import {
 
 interface DeleteModelProp {
   children: React.ReactNode;
+  onConfirm: () => void;
 }
 
-export function DeleteModel({ children }: DeleteModelProp) {
+export function DeleteModel({ children, onConfirm }: DeleteModelProp) {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>{children}</AlertDialogTrigger>
@@ -22,13 +23,12 @@ export function DeleteModel({ children }: DeleteModelProp) {
         <AlertDialogHeader>
           <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
           <AlertDialogDescription>
-            This action cannot be undone. This will permanently delete your
-            account and remove your data from our servers.
+            This action cannot be undone.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction>Continue</AlertDialogAction>
+          <AlertDialogAction onClick={onConfirm}>Delete</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
