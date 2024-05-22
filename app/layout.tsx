@@ -1,7 +1,7 @@
 import "./globals.css";
+import { Metadata } from "next";
 import { Toaster } from "sonner";
 import { Poppins } from "next/font/google";
-import { constructMetadata } from "@/lib/utils";
 import { Analytics } from "@vercel/analytics/react";
 import { ThemeProvider } from "@/components/theme-provider";
 import { ConvexProvider } from "@/components/providers/convex-provider";
@@ -11,7 +11,58 @@ import Footer from "@/components/footer";
 
 const font = Poppins({ subsets: ["latin"], weight: ["500"] });
 
-export const metadata = constructMetadata();
+export const metadata: Metadata = {
+  title: {
+    default: "NotesGPT",
+    template: `%s - "NotesGPT`,
+  },
+  metadataBase: new URL("https://notessgpt.vercel.app"),
+  description:
+    "NotesGPT seamlessly converts your voice notes into organized summaries and clear action items using AI.",
+  keywords: [
+    "Voice Note Conversion",
+    "AI Note Making",
+    "Automated Summaries",
+    "Task Management",
+    "Project Management",
+    "Voice to Text",
+  ],
+  authors: [
+    {
+      name: "abdtriedcoding",
+      url: "https://abdullahsidd.vercel.app",
+    },
+  ],
+  creator: "abdtriedcoding",
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "https://notessgpt.vercel.app",
+    title: "NotesGPT",
+    description:
+      "NotesGPT seamlessly converts your voice notes into organized summaries and clear action items using AI.",
+    siteName: "NotesGPT",
+    images: [
+      {
+        url: "/thumbnail.png",
+        width: 1200,
+        height: 630,
+        alt: "NotesGPT",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "NotesGPT",
+    description:
+      "NotesGPT seamlessly converts your voice notes into organized summaries and clear action items using AI.",
+    images: ["/thumbnail.png"],
+    creator: "@abdtriedcoding",
+  },
+  icons: {
+    icon: "/favicon.ico",
+  },
+};
 
 export default function RootLayout({
   children,
