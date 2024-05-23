@@ -2,6 +2,7 @@ import { toast } from "sonner";
 import { useState } from "react";
 import { Check, Copy } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { useOrigin } from "@/hooks/use-origin";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -17,10 +18,13 @@ interface ShareChatModelProp {
 }
 
 export function ShareChatModel({ children, id }: ShareChatModelProp) {
+  const origin = useOrigin();
   const [copied, setCopied] = useState(false);
 
+  const url = `${origin}/share/${id}`;
+
   const onCopy = () => {
-    navigator.clipboard.writeText(`http://localhost:3000/share/${id}`);
+    navigator.clipboard.writeText(url);
     setCopied(true);
     toast.success("Url Copied");
 
@@ -38,7 +42,7 @@ export function ShareChatModel({ children, id }: ShareChatModelProp) {
         </DialogHeader>
         <div className="flex items-center">
           <Input
-            value={id}
+            value={url}
             disabled
             className="h-8 rounded-r-none border-2 truncate"
           />
