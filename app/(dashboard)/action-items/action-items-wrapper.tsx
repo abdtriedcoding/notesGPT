@@ -1,6 +1,8 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
+import { Input } from "@/components/ui/input";
 import { api } from "@/convex/_generated/api";
 import { Button } from "@/components/ui/button";
 import { Preloaded, usePreloadedQuery } from "convex/react";
@@ -13,6 +15,14 @@ export default function ActionItemsWrapper(props: {
 
   if (userActionItems.length === 0) return <EmptyState />;
 
+  const [search, setSearch] = useState("");
+  const actionItems = userActionItems.filter(
+    (e) =>
+      e.action.toLocaleLowerCase().includes(search.toLocaleLowerCase()) ||
+      (e.title &&
+        e?.title.toLocaleLowerCase().includes(search.toLocaleLowerCase()))
+  );
+
   return (
     <>
       <div className="space-y-4 max-w-xl mx-auto">
@@ -20,9 +30,16 @@ export default function ActionItemsWrapper(props: {
         <h3 className="text-gray-600 dark:text-gray-300 text-center">
           {userActionItems?.length ?? 0} tasks
         </h3>
-        {userActionItems.map((item) => (
-          <NoteCard key={item._id} {...item} />
-        ))}
+        <Input
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Search through action items..."
+        />
+        {actionItems.length === 0 ? (
+          <p className="text-center">No Result Found</p>
+        ) : (
+          actionItems.map((item) => <NoteCard key={item._id} {...item} />)
+        )}
       </div>
     </>
   );
