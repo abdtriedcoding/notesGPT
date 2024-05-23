@@ -12,11 +12,13 @@ interface ActionItemProps {
   userId: string;
   noteId: Id<"notes">;
   action: string;
+  title?: string;
 }
 
 export default function NoteCard({
   _creationTime,
   action,
+  title,
   _id,
 }: ActionItemProps) {
   const removeActionItem = useMutation(api.notes.removeActionItem);
@@ -34,12 +36,17 @@ export default function NoteCard({
 
   return (
     <Card>
-      <CardContent className="flex space-x-4 items-center justify-between">
-        <div className="flex items-center space-x-4">
-          <Checkbox onClick={handleremoveActionItem} />
-          <p>{action}</p>
+      <CardContent>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-4">
+            <Checkbox onClick={handleremoveActionItem} />
+            <p>{action}</p>
+          </div>
+          <p>{formatDate(_creationTime)}</p>
         </div>
-        <p>{formatDate(_creationTime)}</p>
+        <p className="truncate text-[15px] pt-2 font-[300] dark:text-gray-300 text-gray-600 leading-[249%] tracking-[-0.6px] md:text-xl lg:text-xl">
+          From: {title}
+        </p>
       </CardContent>
     </Card>
   );

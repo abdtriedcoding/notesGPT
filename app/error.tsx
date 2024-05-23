@@ -12,7 +12,7 @@ export default function Error({
   return (
     <div className="min-h-screen flex flex-col items-center justify-center space-y-4">
       <h1 className="font-display text-3xl">Something went wrong!</h1>
-      <Button variant={"outline"} size={"lg"} onClick={() => reset()}>
+      <Button size={"lg"} onClick={() => reset()}>
         Try Again
       </Button>
     </div>

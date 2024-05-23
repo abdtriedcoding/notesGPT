@@ -17,7 +17,7 @@ export default function ActionItemsWrapper(props: {
     <>
       <div className="space-y-4 max-w-xl mx-auto">
         <h1 className="text-center text-2xl font-medium">Action Items</h1>
-        <h3 className="text-gray-600 text-center">
+        <h3 className="text-gray-600 dark:text-gray-300 text-center">
           {userActionItems?.length ?? 0} tasks
         </h3>
         {userActionItems.map((item) => (
