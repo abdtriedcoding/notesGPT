@@ -1,14 +1,15 @@
+import { toast } from "sonner";
+import { useState } from "react";
+import { Check, Copy } from "lucide-react";
+import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
 
 interface ShareChatModelProp {
   children: React.ReactNode;
@@ -16,24 +17,43 @@ interface ShareChatModelProp {
 }
 
 export function ShareChatModel({ children, id }: ShareChatModelProp) {
+  const [copied, setCopied] = useState(false);
+
+  const onCopy = () => {
+    navigator.clipboard.writeText(`http://localhost:3000/share/${id}`);
+    setCopied(true);
+    toast.success("Url Copied");
+
+    setTimeout(() => {
+      setCopied(false);
+    }, 1000);
+  };
+
   return (
     <Dialog>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Edit profile</DialogTitle>
-          <DialogDescription>
-            Make changes to your profile here. Click save when you're done.
-          </DialogDescription>
+          <DialogTitle>Share Your Link</DialogTitle>
         </DialogHeader>
-        <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Input id="name" value="Pedro Duarte" className="col-span-3" />
-          </div>
+        <div className="flex items-center">
+          <Input
+            value={id}
+            disabled
+            className="h-8 rounded-r-none border-2 truncate"
+          />
+          <Button
+            onClick={onCopy}
+            disabled={copied}
+            className="h-8 rounded-l-none"
+          >
+            {copied ? (
+              <Check className="h-4 w-4 text-green-500" />
+            ) : (
+              <Copy className="h-4 w-4" />
+            )}
+          </Button>
         </div>
-        <DialogFooter>
-          <Button type="submit">Save changes</Button>
-        </DialogFooter>
       </DialogContent>
     </Dialog>
   );
