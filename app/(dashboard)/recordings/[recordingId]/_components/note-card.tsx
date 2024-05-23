@@ -13,6 +13,7 @@ interface ActionItemProps {
   noteId: Id<"notes">;
   action: string;
   title?: string;
+  preview?: boolean;
 }
 
 export default function NoteCard({
@@ -20,6 +21,7 @@ export default function NoteCard({
   action,
   title,
   _id,
+  preview,
 }: ActionItemProps) {
   const removeActionItem = useMutation(api.notes.removeActionItem);
 
@@ -39,7 +41,7 @@ export default function NoteCard({
       <CardContent>
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-4">
-            <Checkbox onClick={handleremoveActionItem} />
+            {!preview && <Checkbox onClick={handleremoveActionItem} />}
             <p>{action}</p>
           </div>
           <p>{formatDate(_creationTime)}</p>

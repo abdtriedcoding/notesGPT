@@ -39,7 +39,7 @@ const SharePage = () => {
         <TabsContent value="summary">{note?.summary}</TabsContent>
         <TabsContent className="space-y-4" value="actionItem">
           {actionItems.map((item) => (
-            <NoteCard key={item._id} {...item} title={note.title} />
+            <NoteCard key={item._id} {...item} title={note.title} preview />
           ))}
         </TabsContent>
       </Tabs>
