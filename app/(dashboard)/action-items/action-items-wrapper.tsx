@@ -11,11 +11,11 @@ import NoteCard from "../recordings/[recordingId]/_components/note-card";
 export default function ActionItemsWrapper(props: {
   preloadedActionItems: Preloaded<typeof api.notes.getActionItems>;
 }) {
+  const [search, setSearch] = useState("");
   const userActionItems = usePreloadedQuery(props.preloadedActionItems);
 
   if (userActionItems.length === 0) return <EmptyState />;
 
-  const [search, setSearch] = useState("");
   const actionItems = userActionItems.filter(
     (e) =>
       e.action.toLocaleLowerCase().includes(search.toLocaleLowerCase()) ||
