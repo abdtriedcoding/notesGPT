@@ -16,6 +16,7 @@ import { useRouter } from "next/navigation";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { DeleteModel } from "@/components/delete-model";
+import { ShareChatModel } from "@/components/sharechat-model";
 
 export function DataTableRowActions({ id }: { id: Id<"notes"> }) {
   const router = useRouter();
@@ -44,14 +45,25 @@ export function DataTableRowActions({ id }: { id: Id<"notes"> }) {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-[160px]">
-        <DropdownMenuItem onClick={() => router.push(`/recordings/${id}`)}>
+        <Button
+          onClick={() => router.push(`/recordings/${id}`)}
+          variant={"outline"}
+          className="w-full text-start justify-start px-2 py-1 text-sm border-none"
+        >
           Edit
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
+        </Button>
+        <ShareChatModel id={id}>
+          <Button
+            variant={"outline"}
+            className="w-full text-start justify-start px-2 py-1 text-sm border-none"
+          >
+            Share
+          </Button>
+        </ShareChatModel>
         <DeleteModel onConfirm={handelRemoveNote}>
           <Button
-            variant={"destructive"}
-            className="w-full text-start justify-start px-2 py-1.5 text-sm"
+            variant={"outline"}
+            className="w-full text-red-500 hover:text-red-600 text-start justify-start px-2 py-1 text-sm border-none"
           >
             Delete
           </Button>
