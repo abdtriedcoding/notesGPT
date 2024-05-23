@@ -1,5 +1,5 @@
 <div align="center">
-    <h1 align="center">NotesGPT-> AI-Powered Voice Notes Management</h1>
+    <h1 align="center">NotesGPT</h1>
     <h5>NotesGPT seamlessly converts your voice notes into organized summaries and clear action items using AI.</h5>
 </div>
 
@@ -21,6 +21,8 @@ Key Features:
 - Use google gemini ai for title, summary generation 🚀
 - Use assembly ai for generating transcript of voice 🔊
 - Ability to add action items ✅
+- Ability to search through action items 🔎
+- Share note functionality 🌍
 
 ### Prerequisites
 
