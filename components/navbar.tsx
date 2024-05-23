@@ -19,35 +19,41 @@ export default function Navbar() {
   const { user } = useUser();
 
   return (
-    <nav className="sticky inset-x-0 top-0 z-30 px-4 flex h-16 items-center gap-10 border-b bg-background/60 backdrop-blur-xl transition-all">
-      <Logo />
-      {pathname !== "/" && (
-        <div className="hidden items-center gap-6 md:flex">
-          {navItems?.map((item, index) => <NavItem key={index} {...item} />)}
-        </div>
+    <>
+      {!pathname.startsWith("/share") && (
+        <nav className="sticky inset-x-0 top-0 z-30 px-4 flex h-16 items-center gap-10 border-b bg-background/60 backdrop-blur-xl transition-all">
+          <Logo />
+          {pathname !== "/" && (
+            <div className="hidden items-center gap-6 md:flex">
+              {navItems?.map((item, index) => (
+                <NavItem key={index} {...item} />
+              ))}
+            </div>
+          )}
+          <div className="ml-auto flex items-center space-x-4">
+            {user ? (
+              <UserNav />
+            ) : (
+              <>
+                <ClerkLoading>
+                  <Loader className="w5 h-5 animate-spin" />
+                </ClerkLoading>
+                <ClerkLoaded>
+                  <SignInButton
+                    fallbackRedirectUrl={"/recordings"}
+                    signUpFallbackRedirectUrl={"/recordings"}
+                    mode="modal"
+                  >
+                    <Button className="rounded-lg">Sign In</Button>
+                  </SignInButton>
+                </ClerkLoaded>
+              </>
+            )}
+            <ThemeToggle />
+          </div>
+        </nav>
       )}
-      <div className="ml-auto flex items-center space-x-4">
-        {user ? (
-          <UserNav />
-        ) : (
-          <>
-            <ClerkLoading>
-              <Loader className="w5 h-5 animate-spin" />
-            </ClerkLoading>
-            <ClerkLoaded>
-              <SignInButton
-                fallbackRedirectUrl={"/recordings"}
-                signUpFallbackRedirectUrl={"/recordings"}
-                mode="modal"
-              >
-                <Button className="rounded-lg">Sign In</Button>
-              </SignInButton>
-            </ClerkLoaded>
-          </>
-        )}
-        <ThemeToggle />
-      </div>
-    </nav>
+    </>
   );
 }
 
