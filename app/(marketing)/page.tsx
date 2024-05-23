@@ -60,16 +60,24 @@ const MarketingPage = () => {
             <Image
               src="/mobile.png"
               fill
-              className="object-contain"
+              className="object-contain border dark:border-gray-500 border-gray-300 p-2 rounded-lg"
               alt="mobile"
+              priority
+              fetchPriority="high"
+              loading="eager"
+              draggable={"false"}
             />
           </div>
           <div className="relative h-[500px] w-[1200px] hidden md:block">
             <Image
               src="/desktop.png"
               fill
-              className="object-contain"
+              className="object-contain border dark:border-gray-500 border-gray-300 p-2 rounded-lg"
               alt="Desktop"
+              priority
+              fetchPriority="high"
+              loading="eager"
+              draggable={"false"}
             />
           </div>
         </div>
