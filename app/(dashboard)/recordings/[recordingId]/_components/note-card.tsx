@@ -44,8 +44,8 @@ export default function NoteCard({
           </div>
           <p>{formatDate(_creationTime)}</p>
         </div>
-        <p className="truncate text-[15px] pt-2 font-[300] dark:text-gray-300 text-gray-600 leading-[249%] tracking-[-0.6px] md:text-xl lg:text-xl">
-          From: {title}
+        <p className="truncate w-fit text-[15px] pt-2 font-[300] dark:text-gray-300 text-gray-600 leading-[249%] tracking-[-0.6px] md:text-xl lg:text-xl">
+          From: {title ?? "No Title"}
         </p>
       </CardContent>
     </Card>

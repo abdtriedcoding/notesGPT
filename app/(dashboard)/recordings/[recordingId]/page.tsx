@@ -42,7 +42,7 @@ export default function RecordingIdPage() {
         <TabsContent className="space-y-4" value="actionItem">
           <ActionForm id={note._id} />
           {actionItems.map((item) => (
-            <NoteCard key={item._id} {...item} />
+            <NoteCard key={item._id} {...item} title={note.title} />
           ))}
         </TabsContent>
       </Tabs>
