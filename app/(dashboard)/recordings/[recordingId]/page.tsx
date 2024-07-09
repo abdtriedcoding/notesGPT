@@ -1,37 +1,37 @@
-"use client";
+'use client'
 
-import { useQuery } from "convex/react";
-import { useParams } from "next/navigation";
-import { api } from "@/convex/_generated/api";
-import { Doc, Id } from "@/convex/_generated/dataModel";
+import { useQuery } from 'convex/react'
+import { useParams } from 'next/navigation'
+import { api } from '@/convex/_generated/api'
+import { Doc, Id } from '@/convex/_generated/dataModel'
 
-import NoteCard from "./_components/note-card";
-import ActionForm from "./_components/action-form";
-import { ActionItemSkelton } from "@/components/skeltons";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import NoteCard from './_components/note-card'
+import ActionForm from './_components/action-form'
+import { ActionItemSkelton } from '@/components/skeltons'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
 interface NoteWithActionItem {
-  note: Doc<"notes">;
-  actionItems: Doc<"actionItems">[];
+  note: Doc<'notes'>
+  actionItems: Doc<'actionItems'>[]
 }
 
 export default function RecordingIdPage() {
-  const params = useParams();
-  const { recordingId } = params;
+  const params = useParams()
+  const { recordingId } = params
 
   const noteWithActionItems = useQuery(api.notes.getNoteById, {
-    id: recordingId as Id<"notes">,
-  });
+    id: recordingId as Id<'notes'>,
+  })
 
   if (noteWithActionItems === undefined) {
-    return <ActionItemSkelton />;
+    return <ActionItemSkelton />
   }
 
-  const { note, actionItems }: NoteWithActionItem = noteWithActionItems;
+  const { note, actionItems }: NoteWithActionItem = noteWithActionItems
 
   return (
     <>
-      <Tabs defaultValue="transcript" className="max-w-xl mx-auto text-center">
+      <Tabs defaultValue="transcript" className="mx-auto max-w-xl text-center">
         <TabsList className="mb-4">
           <TabsTrigger value="transcript">Transcript</TabsTrigger>
           <TabsTrigger value="summary">Summary</TabsTrigger>
@@ -47,5 +47,5 @@ export default function RecordingIdPage() {
         </TabsContent>
       </Tabs>
     </>
-  );
+  )
 }

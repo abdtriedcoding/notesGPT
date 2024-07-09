@@ -1,6 +1,6 @@
-"use client";
+'use client'
 
-import { Table } from "@tanstack/react-table";
+import { Table } from '@tanstack/react-table'
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -9,12 +9,12 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
-import { MoreHorizontalIcon } from "lucide-react";
+} from '@/components/ui/dropdown-menu'
+import { Button } from '@/components/ui/button'
+import { MoreHorizontalIcon } from 'lucide-react'
 
 interface DataTableViewOptionsProps<TData> {
-  table: Table<TData>;
+  table: Table<TData>
 }
 
 export function DataTableViewOptions<TData>({
@@ -39,7 +39,7 @@ export function DataTableViewOptions<TData>({
           .getAllColumns()
           .filter(
             (column) =>
-              typeof column.accessorFn !== "undefined" && column.getCanHide()
+              typeof column.accessorFn !== 'undefined' && column.getCanHide()
           )
           .map((column) => {
             return (
@@ -51,9 +51,9 @@ export function DataTableViewOptions<TData>({
               >
                 {column.id}
               </DropdownMenuCheckboxItem>
-            );
+            )
           })}
       </DropdownMenuContent>
     </DropdownMenu>
-  );
+  )
 }

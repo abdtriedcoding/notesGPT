@@ -1,5 +1,5 @@
-import { v } from "convex/values";
-import { defineSchema, defineTable } from "convex/server";
+import { v } from 'convex/values'
+import { defineSchema, defineTable } from 'convex/server'
 
 export default defineSchema({
   notes: defineTable({
@@ -9,12 +9,12 @@ export default defineSchema({
     title: v.optional(v.string()),
     transcription: v.optional(v.string()),
     summary: v.optional(v.string()),
-  }).index("by_userId", ["userId"]),
+  }).index('by_userId', ['userId']),
   actionItems: defineTable({
-    noteId: v.id("notes"),
+    noteId: v.id('notes'),
     userId: v.string(),
     action: v.string(),
   })
-    .index("by_noteId", ["noteId"])
-    .index("by_userId", ["userId"]),
-});
+    .index('by_noteId', ['noteId'])
+    .index('by_userId', ['userId']),
+})

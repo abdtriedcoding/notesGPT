@@ -1,11 +1,11 @@
-"use client";
+'use client'
 
-import { Input } from "@/components/ui/input";
-import { Table } from "@tanstack/react-table";
-import { DataTableViewOptions } from "./data-table-view-options";
+import { Input } from '@/components/ui/input'
+import { Table } from '@tanstack/react-table'
+import { DataTableViewOptions } from './data-table-view-options'
 
 interface DataTableToolbarProps<TData> {
-  table: Table<TData>;
+  table: Table<TData>
 }
 
 export function DataTableToolbar<TData>({
@@ -16,14 +16,14 @@ export function DataTableToolbar<TData>({
       <div className="flex flex-1 items-center space-x-2">
         <Input
           placeholder="Search notes..."
-          value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
+          value={(table.getColumn('title')?.getFilterValue() as string) ?? ''}
           onChange={(event) =>
-            table.getColumn("title")?.setFilterValue(event.target.value)
+            table.getColumn('title')?.setFilterValue(event.target.value)
           }
           className="h-8 w-[250px] lg:w-[350px]"
         />
       </div>
       <DataTableViewOptions table={table} />
     </div>
-  );
+  )
 }

@@ -1,19 +1,19 @@
-import { toast } from "sonner";
-import { formatDate } from "@/lib/utils";
-import { useMutation } from "convex/react";
-import { api } from "@/convex/_generated/api";
-import { Id } from "@/convex/_generated/dataModel";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Card, CardContent } from "@/components/ui/card";
+import { toast } from 'sonner'
+import { formatDate } from '@/lib/utils'
+import { useMutation } from 'convex/react'
+import { api } from '@/convex/_generated/api'
+import { Id } from '@/convex/_generated/dataModel'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Card, CardContent } from '@/components/ui/card'
 
 interface ActionItemProps {
-  _id: Id<"actionItems">;
-  _creationTime: number;
-  userId: string;
-  noteId: Id<"notes">;
-  action: string;
-  title?: string;
-  preview?: boolean;
+  _id: Id<'actionItems'>
+  _creationTime: number
+  userId: string
+  noteId: Id<'notes'>
+  action: string
+  title?: string
+  preview?: boolean
 }
 
 export default function NoteCard({
@@ -23,18 +23,18 @@ export default function NoteCard({
   _id,
   preview,
 }: ActionItemProps) {
-  const removeActionItem = useMutation(api.notes.removeActionItem);
+  const removeActionItem = useMutation(api.notes.removeActionItem)
 
   const handleremoveActionItem = () => {
     const promise = removeActionItem({
       id: _id,
-    });
+    })
     toast.promise(promise, {
-      loading: "Deleting Action Item...",
-      success: "Action Item Deleted",
-      error: " Failed to delete action item.",
-    });
-  };
+      loading: 'Deleting action item...',
+      success: 'Action item deleted',
+      error: ' Failed to delete action item',
+    })
+  }
 
   return (
     <Card>
@@ -46,10 +46,10 @@ export default function NoteCard({
           </div>
           <p>{formatDate(_creationTime)}</p>
         </div>
-        <p className="truncate w-fit text-[15px] pt-2 font-[300] dark:text-gray-300 text-gray-600 leading-[249%] tracking-[-0.6px] md:text-xl lg:text-xl">
-          From: {title ?? "No Title"}
+        <p className="w-fit truncate pt-2 text-[15px] font-[300] leading-[249%] tracking-[-0.6px] text-gray-600 dark:text-gray-300 md:text-xl lg:text-xl">
+          From: {title ?? 'No Title'}
         </p>
       </CardContent>
     </Card>
-  );
+  )
 }

@@ -1,4 +1,4 @@
-"use client";
+'use client'
 
 import {
   DropdownMenu,
@@ -6,32 +6,32 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Ellipsis } from "lucide-react";
-import { Button } from "@/components/ui/button";
+} from '@/components/ui/dropdown-menu'
+import { Ellipsis } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 
-import { toast } from "sonner";
-import { useMutation } from "convex/react";
-import { useRouter } from "next/navigation";
-import { api } from "@/convex/_generated/api";
-import { Id } from "@/convex/_generated/dataModel";
-import { DeleteModel } from "@/components/delete-model";
-import { ShareChatModel } from "@/components/sharechat-model";
+import { toast } from 'sonner'
+import { useMutation } from 'convex/react'
+import { useRouter } from 'next/navigation'
+import { api } from '@/convex/_generated/api'
+import { Id } from '@/convex/_generated/dataModel'
+import { DeleteModel } from '@/components/delete-model'
+import { ShareChatModel } from '@/components/sharechat-model'
 
-export function DataTableRowActions({ id }: { id: Id<"notes"> }) {
-  const router = useRouter();
-  const removeNote = useMutation(api.notes.removeNote);
+export function DataTableRowActions({ id }: { id: Id<'notes'> }) {
+  const router = useRouter()
+  const removeNote = useMutation(api.notes.removeNote)
 
   const handelRemoveNote = () => {
     const promise = removeNote({
       id,
-    });
+    })
     toast.promise(promise, {
-      loading: "Deleting Note...",
-      success: "Note Deleted",
-      error: " Failed to delete note.",
-    });
-  };
+      loading: 'Deleting Note...',
+      success: 'Note Deleted',
+      error: ' Failed to delete note.',
+    })
+  }
 
   return (
     <DropdownMenu>
@@ -47,28 +47,28 @@ export function DataTableRowActions({ id }: { id: Id<"notes"> }) {
       <DropdownMenuContent align="end" className="w-[160px]">
         <Button
           onClick={() => router.push(`/recordings/${id}`)}
-          variant={"outline"}
-          className="w-full text-start justify-start px-2 py-1 text-sm border-none"
+          variant={'outline'}
+          className="w-full justify-start border-none px-2 py-1 text-start text-sm"
         >
           Edit
         </Button>
         <ShareChatModel id={id}>
           <Button
-            variant={"outline"}
-            className="w-full text-start justify-start px-2 py-1 text-sm border-none"
+            variant={'outline'}
+            className="w-full justify-start border-none px-2 py-1 text-start text-sm"
           >
             Share
           </Button>
         </ShareChatModel>
         <DeleteModel onConfirm={handelRemoveNote}>
           <Button
-            variant={"outline"}
-            className="w-full text-red-500 hover:text-red-600 text-start justify-start px-2 py-1 text-sm border-none"
+            variant={'outline'}
+            className="w-full justify-start border-none px-2 py-1 text-start text-sm text-red-500 hover:text-red-600"
           >
             Delete
           </Button>
         </DeleteModel>
       </DropdownMenuContent>
     </DropdownMenu>
-  );
+  )
 }
