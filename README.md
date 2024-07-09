@@ -26,7 +26,7 @@ Key Features:
 
 ### Prerequisites
 
-**Node version 20.x.x**
+**You should have Nodejs and Bun installed on your system**
 
 ### Cloning the repository
 
@@ -37,7 +37,7 @@ git clone https://github.com/abdtriedcoding/notesGPT.git
 ### Install packages
 
 ```shell
-npm i
+bun i
 ```
 
 ### Setup .env file taking refrence from .env.example file
@@ -45,12 +45,12 @@ npm i
 ### Setup Convex
 
 ```shell
-npx convex dev
+bunx convex dev
 
 ```
 
 ### Start the app
 
 ```shell
-npm run dev
+bun run dev
 ```
