@@ -12,7 +12,7 @@ export default function RecordPage() {
   const router = useRouter()
   const [isRunning, setIsRunning] = useState(false)
   const [totalSeconds, setTotalSeconds] = useState(0)
-  const [mediaRecorder, setMediaRecorder] = useState(null)
+  const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null)
   const [title, setTitle] = useState('Record your voice note')
 
   const generateUploadUrl = useMutation(api.notes.generateUploadUrl)
@@ -34,7 +34,7 @@ export default function RecordPage() {
     setIsRunning(true)
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
     const recorder = new MediaRecorder(stream)
-    let audioChunks: any = []
+    const audioChunks: Blob[] = []
 
     recorder.ondataavailable = (e) => {
       audioChunks.push(e.data)
@@ -49,23 +49,22 @@ export default function RecordPage() {
         body: audioBlob,
       })
       const { storageId } = await result.json()
-      let noteId = await createNote({ storageId })
+      const noteId = await createNote({ storageId })
       router.push(`/recordings/${noteId}`)
     }
-    setMediaRecorder(recorder as any)
+    setMediaRecorder(recorder)
     recorder.start()
   }
 
   function stopRecording() {
-    // @ts-ignore
-    mediaRecorder.stop()
+    mediaRecorder?.stop()
     setIsRunning(false)
   }
 
-  const handleRecordClick = () => {
+  const handleRecordClick = async () => {
     if (title === 'Record your voice note') {
       setTitle('Recording...')
-      startRecording()
+      await startRecording()
     } else if (title === 'Recording...') {
       setTitle('Processing...')
       stopRecording()

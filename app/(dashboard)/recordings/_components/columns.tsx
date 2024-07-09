@@ -1,8 +1,8 @@
 'use client'
 
 import { formatDate } from '@/lib/utils'
-import { ColumnDef } from '@tanstack/react-table'
-import { Id } from '@/convex/_generated/dataModel'
+import { type ColumnDef } from '@tanstack/react-table'
+import { type Id } from '@/convex/_generated/dataModel'
 import { DataTableRowActions } from './data-table-row-actions'
 import { DataTableColumnHeader } from './data-table-column-header'
 

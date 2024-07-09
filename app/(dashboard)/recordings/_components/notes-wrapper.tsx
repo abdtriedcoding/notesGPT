@@ -3,10 +3,10 @@
 import Link from 'next/link'
 import { columns } from './columns'
 import { DataTable } from './data-table'
-import { api } from '@/convex/_generated/api'
+import { type api } from '@/convex/_generated/api'
 import { Mic, PencilLine } from 'lucide-react'
 import { buttonVariants } from '@/components/ui/button'
-import { Preloaded, usePreloadedQuery } from 'convex/react'
+import { type Preloaded, usePreloadedQuery } from 'convex/react'
 
 export function NotesWrapper(props: {
   preloadedNotes: Preloaded<typeof api.notes.getUserNotes>

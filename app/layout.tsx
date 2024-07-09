@@ -1,6 +1,6 @@
 import './globals.css'
-import { Metadata } from 'next'
 import { Toaster } from 'sonner'
+import { type Metadata } from 'next'
 import { Poppins } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/react'
 import { ThemeProvider } from '@/components/theme-provider'

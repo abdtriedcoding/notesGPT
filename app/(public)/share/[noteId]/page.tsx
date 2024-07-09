@@ -3,7 +3,7 @@
 import { useQuery } from 'convex/react'
 import { useParams } from 'next/navigation'
 import { api } from '@/convex/_generated/api'
-import { Doc, Id } from '@/convex/_generated/dataModel'
+import { type Doc, type Id } from '@/convex/_generated/dataModel'
 
 import { ActionItemSkelton, EmptyState } from '@/components/skeltons'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'

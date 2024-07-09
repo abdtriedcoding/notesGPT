@@ -2,9 +2,9 @@
 
 import { useState } from 'react'
 import { Input } from '@/components/ui/input'
-import { api } from '@/convex/_generated/api'
+import { type api } from '@/convex/_generated/api'
 import { EmptyState } from '@/components/skeltons'
-import { Preloaded, usePreloadedQuery } from 'convex/react'
+import { type Preloaded, usePreloadedQuery } from 'convex/react'
 import NoteCard from '../recordings/[recordingId]/_components/note-card'
 
 export default function ActionItemsWrapper(props: {
@@ -18,8 +18,7 @@ export default function ActionItemsWrapper(props: {
   const actionItems = userActionItems.filter(
     (e) =>
       e.action.toLocaleLowerCase().includes(search.toLocaleLowerCase()) ||
-      (e.title &&
-        e?.title.toLocaleLowerCase().includes(search.toLocaleLowerCase()))
+      e.title?.toLocaleLowerCase().includes(search.toLocaleLowerCase())
   )
 
   return (

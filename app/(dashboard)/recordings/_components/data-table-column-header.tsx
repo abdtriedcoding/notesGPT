@@ -1,12 +1,11 @@
 import { cn } from '@/lib/utils'
-import { Column } from '@tanstack/react-table'
+import { type Column } from '@tanstack/react-table'
 import { Button } from '@/components/ui/button'
 import {
   ArrowDownIcon,
   ArrowUpIcon,
   ChevronsUpDown,
   EyeOff,
-  SortAsc,
 } from 'lucide-react'
 import {
   DropdownMenu,

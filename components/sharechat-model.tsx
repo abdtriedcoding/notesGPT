@@ -23,8 +23,8 @@ export function ShareChatModel({ children, id }: ShareChatModelProp) {
 
   const url = `${origin}/share/${id}`
 
-  const onCopy = () => {
-    navigator.clipboard.writeText(url)
+  const onCopy = async () => {
+    await navigator.clipboard.writeText(url)
     setCopied(true)
     toast.success('Url Copied')
 

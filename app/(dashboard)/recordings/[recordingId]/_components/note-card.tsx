@@ -2,8 +2,8 @@ import { toast } from 'sonner'
 import { formatDate } from '@/lib/utils'
 import { useMutation } from 'convex/react'
 import { api } from '@/convex/_generated/api'
-import { Id } from '@/convex/_generated/dataModel'
 import { Checkbox } from '@/components/ui/checkbox'
+import { type Id } from '@/convex/_generated/dataModel'
 import { Card, CardContent } from '@/components/ui/card'
 
 interface ActionItemProps {
