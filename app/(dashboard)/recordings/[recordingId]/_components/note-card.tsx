@@ -38,16 +38,16 @@ export default function NoteCard({
 
   return (
     <Card>
-      <CardContent>
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-4">
-            {!preview && <Checkbox onClick={handleremoveActionItem} />}
-            <p>{action}</p>
-          </div>
-          <p>{formatDate(_creationTime)}</p>
+      <CardContent className="space-y-2 text-start">
+        <div className="flex items-center space-x-4">
+          {!preview && <Checkbox onClick={handleremoveActionItem} />}
+          <p className="text-start text-sm text-muted-foreground">{action}</p>
         </div>
-        <p className="w-fit truncate pt-2 text-[15px] font-[300] leading-[249%] tracking-[-0.6px] text-gray-600 dark:text-gray-300 md:text-xl lg:text-xl">
+        <p className="text-sm font-medium leading-none">
           From: {title ?? 'No Title'}
+        </p>
+        <p className="text-end text-sm font-normal leading-none text-zinc-300">
+          {formatDate(_creationTime)}
         </p>
       </CardContent>
     </Card>
