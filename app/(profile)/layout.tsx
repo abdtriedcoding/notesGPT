@@ -1,9 +1,11 @@
 export default function UserProfileLayout({
   children,
 }: {
-  children: React.ReactNode;
+  children: React.ReactNode
 }) {
   return (
-    <div className="flex flex-col items-center justify-center">{children}</div>
-  );
+    <div className="flex min-h-screen flex-col items-center justify-center">
+      {children}
+    </div>
+  )
 }

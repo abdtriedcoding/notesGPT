@@ -31,7 +31,7 @@ export default function NoteCard({
     })
     toast.promise(promise, {
       loading: 'Deleting action item...',
-      success: 'Action item deleted',
+      success: 'Action item completed',
       error: ' Failed to delete action item',
     })
   }

@@ -8,11 +8,11 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+} from '@/components/ui/alert-dialog'
 
 interface DeleteModelProp {
-  children: React.ReactNode;
-  onConfirm: () => void;
+  children: React.ReactNode
+  onConfirm: () => void
 }
 
 export function DeleteModel({ children, onConfirm }: DeleteModelProp) {
@@ -32,5 +32,5 @@ export function DeleteModel({ children, onConfirm }: DeleteModelProp) {
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
-  );
+  )
 }

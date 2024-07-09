@@ -1,37 +1,37 @@
-import { toast } from "sonner";
-import { useState } from "react";
-import { Check, Copy } from "lucide-react";
-import { Input } from "@/components/ui/input";
-import { useOrigin } from "@/hooks/use-origin";
-import { Button } from "@/components/ui/button";
+import { toast } from 'sonner'
+import { useState } from 'react'
+import { Check, Copy } from 'lucide-react'
+import { Input } from '@/components/ui/input'
+import { useOrigin } from '@/hooks/use-origin'
+import { Button } from '@/components/ui/button'
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
+} from '@/components/ui/dialog'
 
 interface ShareChatModelProp {
-  children: React.ReactNode;
-  id: string;
+  children: React.ReactNode
+  id: string
 }
 
 export function ShareChatModel({ children, id }: ShareChatModelProp) {
-  const origin = useOrigin();
-  const [copied, setCopied] = useState(false);
+  const origin = useOrigin()
+  const [copied, setCopied] = useState(false)
 
-  const url = `${origin}/share/${id}`;
+  const url = `${origin}/share/${id}`
 
   const onCopy = () => {
-    navigator.clipboard.writeText(url);
-    setCopied(true);
-    toast.success("Url Copied");
+    navigator.clipboard.writeText(url)
+    setCopied(true)
+    toast.success('Url Copied')
 
     setTimeout(() => {
-      setCopied(false);
-    }, 1000);
-  };
+      setCopied(false)
+    }, 1000)
+  }
 
   return (
     <Dialog>
@@ -44,7 +44,7 @@ export function ShareChatModel({ children, id }: ShareChatModelProp) {
           <Input
             value={url}
             disabled
-            className="h-8 rounded-r-none border-2 truncate"
+            className="h-8 truncate rounded-r-none border-2"
           />
           <Button
             onClick={onCopy}
@@ -60,5 +60,5 @@ export function ShareChatModel({ children, id }: ShareChatModelProp) {
         </div>
       </DialogContent>
     </Dialog>
-  );
+  )
 }

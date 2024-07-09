@@ -1,14 +1,14 @@
 export const navItems = [
   {
-    title: "Recordings",
-    href: "/recordings",
+    title: 'Recordings',
+    href: '/recordings',
   },
   {
-    title: "Record",
-    href: "/record",
+    title: 'Record',
+    href: '/record',
   },
   {
-    title: "Action Items",
-    href: "/action-items",
+    title: 'Action Items',
+    href: '/action-items',
   },
-];
+]
