@@ -54,31 +54,32 @@ export const getUserNotes = query({
   },
 })
 
+// Currently not a good solution its just a working prototype query. Need to make seprate query for getting particular note from id and getting share note page. Need to add confirm user identity and other edge cases.
 export const getNoteById = query({
   args: {
     id: v.id('notes'),
   },
   handler: async (ctx, args) => {
     const { id } = args
-    const identity = await ctx.auth.getUserIdentity()
-    if (!identity) {
-      throw new Error('Not authenticated')
-    }
+    // const identity = await ctx.auth.getUserIdentity()
+    // if (!identity) {
+    //   throw new Error('Not authenticated')
+    // }
 
-    const userId = identity.subject
+    // const userId = identity.subject
 
-    if (!identity) {
-      throw new Error('Not authenticated')
-    }
+    // if (!userId) {
+    //   throw new Error('Not authenticated')
+    // }
 
     const note = await ctx.db.get(id)
     if (!note) {
       throw new Error('Not found')
     }
 
-    if (note.userId !== userId) {
-      throw new Error('Unauthorized')
-    }
+    // if (note.userId !== userId) {
+    //   throw new Error('Unauthorized')
+    // }
 
     const actionItems = await ctx.db
       .query('actionItems')

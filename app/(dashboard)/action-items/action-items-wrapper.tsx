@@ -1,10 +1,9 @@
 'use client'
 
-import Link from 'next/link'
 import { useState } from 'react'
 import { Input } from '@/components/ui/input'
 import { api } from '@/convex/_generated/api'
-import { Button } from '@/components/ui/button'
+import { EmptyState } from '@/components/skeltons'
 import { Preloaded, usePreloadedQuery } from 'convex/react'
 import NoteCard from '../recordings/[recordingId]/_components/note-card'
 
@@ -39,17 +38,6 @@ export default function ActionItemsWrapper(props: {
       ) : (
         actionItems.map((item) => <NoteCard key={item._id} {...item} />)
       )}
-    </div>
-  )
-}
-
-function EmptyState() {
-  return (
-    <div className="flex min-h-screen flex-col items-center justify-center space-y-4 text-center">
-      <p className="text-2xl">You currently have no action items.</p>
-      <Button asChild size={'lg'}>
-        <Link href={'/record'}>Record your first voice note</Link>
-      </Button>
     </div>
   )
 }
