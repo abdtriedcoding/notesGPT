@@ -1,29 +1,24 @@
-"use client";
+'use client'
 
-import Link from "next/link";
-import UserNav from "./user-nav";
-import { navItems } from "@/constants";
-import { usePathname } from "next/navigation";
-import { Button } from "@/components/ui/button";
-import { Loader, StickyNote } from "lucide-react";
-import { ThemeToggle } from "@/components/theme-toggle";
-import {
-  ClerkLoaded,
-  ClerkLoading,
-  SignInButton,
-  useUser,
-} from "@clerk/nextjs";
+import Link from 'next/link'
+import UserNav from './user-nav'
+import { navItems } from '@/constants'
+import { usePathname } from 'next/navigation'
+import { Button } from '@/components/ui/button'
+import { Loader, StickyNote } from 'lucide-react'
+import { ThemeToggle } from '@/components/theme-toggle'
+import { ClerkLoaded, ClerkLoading, SignInButton, useUser } from '@clerk/nextjs'
 
 export default function Navbar() {
-  const pathname = usePathname();
-  const { user } = useUser();
+  const pathname = usePathname()
+  const { user } = useUser()
 
   return (
     <>
-      {!pathname.startsWith("/share") && (
-        <nav className="sticky inset-x-0 top-0 z-30 px-4 flex h-16 items-center gap-10 border-b bg-background/60 backdrop-blur-xl transition-all">
+      {!pathname.startsWith('/share') && (
+        <nav className="sticky inset-x-0 top-0 z-30 flex h-16 items-center gap-10 border-b bg-background/60 px-4 backdrop-blur-xl transition-all">
           <Logo />
-          {pathname !== "/" && (
+          {pathname !== '/' && (
             <div className="hidden items-center gap-6 md:flex">
               {navItems?.map((item, index) => (
                 <NavItem key={index} {...item} />
@@ -40,8 +35,8 @@ export default function Navbar() {
                 </ClerkLoading>
                 <ClerkLoaded>
                   <SignInButton
-                    fallbackRedirectUrl={"/recordings"}
-                    signUpFallbackRedirectUrl={"/recordings"}
+                    fallbackRedirectUrl={'/recordings'}
+                    signUpFallbackRedirectUrl={'/recordings'}
                     mode="modal"
                   >
                     <Button className="rounded-lg">Sign In</Button>
@@ -54,16 +49,16 @@ export default function Navbar() {
         </nav>
       )}
     </>
-  );
+  )
 }
 
 function Logo() {
   return (
     <Link href="/" className="flex items-center space-x-2">
-      <StickyNote className="w-7 h-7" />
+      <StickyNote className="h-7 w-7" />
       <span className="inline-block text-xl font-bold">NotesGPT</span>
     </Link>
-  );
+  )
 }
 
 function NavItem({ title, href }: { title: string; href: string }) {
@@ -74,5 +69,5 @@ function NavItem({ title, href }: { title: string; href: string }) {
     >
       {title}
     </Link>
-  );
+  )
 }

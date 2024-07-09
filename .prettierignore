@@ -1,0 +1,21 @@
+# Ignore artifacts:
+build
+coverage
+dist
+.next
+out
+node_modules
+public
+
+# Ignore specific config files
+.env
+.env.local
+
+# Ignore package manager lock files
+bun.lockb
+
+# Ignore Next.js generated files
+.next/
+
+# Ignore the build output directory
+out/

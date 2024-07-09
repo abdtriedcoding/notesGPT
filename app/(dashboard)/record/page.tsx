@@ -1,95 +1,95 @@
-"use client";
+'use client'
 
-import Image from "next/image";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { formatTime, getCurrentFormattedDate } from "@/lib/utils";
+import Image from 'next/image'
+import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { formatTime, getCurrentFormattedDate } from '@/lib/utils'
 
-import { useMutation } from "convex/react";
-import { api } from "@/convex/_generated/api";
+import { useMutation } from 'convex/react'
+import { api } from '@/convex/_generated/api'
 
 export default function RecordPage() {
-  const router = useRouter();
-  const [isRunning, setIsRunning] = useState(false);
-  const [totalSeconds, setTotalSeconds] = useState(0);
-  const [mediaRecorder, setMediaRecorder] = useState(null);
-  const [title, setTitle] = useState("Record your voice note");
+  const router = useRouter()
+  const [isRunning, setIsRunning] = useState(false)
+  const [totalSeconds, setTotalSeconds] = useState(0)
+  const [mediaRecorder, setMediaRecorder] = useState(null)
+  const [title, setTitle] = useState('Record your voice note')
 
-  const generateUploadUrl = useMutation(api.notes.generateUploadUrl);
-  const createNote = useMutation(api.notes.createNote);
+  const generateUploadUrl = useMutation(api.notes.generateUploadUrl)
+  const createNote = useMutation(api.notes.createNote)
 
   useEffect(() => {
-    let interval: NodeJS.Timeout;
+    let interval: NodeJS.Timeout
 
     if (isRunning) {
       interval = setInterval(() => {
-        setTotalSeconds((prevTotalSeconds) => prevTotalSeconds + 1);
-      }, 1000);
+        setTotalSeconds((prevTotalSeconds) => prevTotalSeconds + 1)
+      }, 1000)
     }
 
-    return () => clearInterval(interval);
-  }, [isRunning]);
+    return () => clearInterval(interval)
+  }, [isRunning])
 
   async function startRecording() {
-    setIsRunning(true);
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    const recorder = new MediaRecorder(stream);
-    let audioChunks: any = [];
+    setIsRunning(true)
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
+    const recorder = new MediaRecorder(stream)
+    let audioChunks: any = []
 
     recorder.ondataavailable = (e) => {
-      audioChunks.push(e.data);
-    };
+      audioChunks.push(e.data)
+    }
 
     recorder.onstop = async () => {
-      const audioBlob = new Blob(audioChunks, { type: "audio/mp3" });
-      const postUrl = await generateUploadUrl();
+      const audioBlob = new Blob(audioChunks, { type: 'audio/mp3' })
+      const postUrl = await generateUploadUrl()
       const result = await fetch(postUrl, {
-        method: "POST",
-        headers: { "Content-Type": "audio/mp3" },
+        method: 'POST',
+        headers: { 'Content-Type': 'audio/mp3' },
         body: audioBlob,
-      });
-      const { storageId } = await result.json();
-      let noteId = await createNote({ storageId });
-      router.push(`/recordings/${noteId}`);
-    };
-    setMediaRecorder(recorder as any);
-    recorder.start();
+      })
+      const { storageId } = await result.json()
+      let noteId = await createNote({ storageId })
+      router.push(`/recordings/${noteId}`)
+    }
+    setMediaRecorder(recorder as any)
+    recorder.start()
   }
 
   function stopRecording() {
     // @ts-ignore
-    mediaRecorder.stop();
-    setIsRunning(false);
+    mediaRecorder.stop()
+    setIsRunning(false)
   }
 
   const handleRecordClick = () => {
-    if (title === "Record your voice note") {
-      setTitle("Recording...");
-      startRecording();
-    } else if (title === "Recording...") {
-      setTitle("Processing...");
-      stopRecording();
+    if (title === 'Record your voice note') {
+      setTitle('Recording...')
+      startRecording()
+    } else if (title === 'Recording...') {
+      setTitle('Processing...')
+      stopRecording()
     }
-  };
+  }
 
   return (
     <div className="flex flex-col items-center space-y-4">
-      <h1 className="text-xl md:text-4xl font-medium">{title}</h1>
+      <h1 className="text-xl font-medium md:text-4xl">{title}</h1>
       <p className="text-gray-400">{getCurrentFormattedDate()}</p>
       <div className="py-20">
         <div className="relative mx-auto flex h-[316px] w-[316px] items-center justify-center">
           <div
             className={`recording-box absolute h-full w-full rounded-[50%] p-[12%] pt-[17%] ${
-              title === "Recording..." ? "record-animation" : ""
+              title === 'Recording...' ? 'record-animation' : ''
             }`}
           >
             <div
               className="h-full w-full rounded-[50%]"
-              style={{ background: "linear-gradient(#E31C1CD6, #003EB6CC)" }}
+              style={{ background: 'linear-gradient(#E31C1CD6, #003EB6CC)' }}
             />
           </div>
           <div className="z-20 flex h-fit w-fit flex-col items-center justify-center">
-            <h1 className="text-[60px] leading-[114.3%] tracking-[-1.5px] text-light">
+            <h1 className="text-light text-[60px] leading-[114.3%] tracking-[-1.5px]">
               {formatTime(Math.floor(totalSeconds / 60))}:
               {formatTime(totalSeconds % 60)}
             </h1>
@@ -99,7 +99,7 @@ export default function RecordPage() {
       <button onClick={handleRecordClick}>
         {!isRunning ? (
           <Image
-            src={"/nonrecording_mic.svg"}
+            src={'/nonrecording_mic.svg'}
             alt="recording mic"
             width={148}
             height={148}
@@ -107,7 +107,7 @@ export default function RecordPage() {
           />
         ) : (
           <Image
-            src={"/recording_mic.svg"}
+            src={'/recording_mic.svg'}
             alt="recording mic"
             width={148}
             height={148}
@@ -116,5 +116,5 @@ export default function RecordPage() {
         )}
       </button>
     </div>
-  );
+  )
 }
