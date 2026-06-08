@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { columns } from './columns'
+import { columns, type NoteRow } from './columns'
 import { DataTable } from './data-table'
 import { Mic } from 'lucide-react'
 import { type api } from '@/convex/_generated/api'
@@ -14,6 +14,7 @@ export function NotesWrapper(props: {
   preloadedNotes: Preloaded<typeof api.notes.getUserNotes>
 }) {
   const userNotes = usePreloadedQuery(props.preloadedNotes)
+  const data: NoteRow[] = userNotes
 
   return (
     <div className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
@@ -47,7 +48,7 @@ export function NotesWrapper(props: {
           className="mt-6"
         />
       ) : (
-        <DataTable data={userNotes} columns={columns} />
+        <DataTable data={data} columns={columns} />
       )}
     </div>
   )

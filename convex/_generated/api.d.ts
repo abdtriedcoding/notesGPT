@@ -16,6 +16,7 @@ import type * as constants from "../constants.js";
 import type * as env from "../env.js";
 import type * as internalMutations from "../internalMutations.js";
 import type * as notes from "../notes.js";
+import type * as organize from "../organize.js";
 import type * as summarize from "../summarize.js";
 
 import type {
@@ -33,6 +34,7 @@ declare const fullApi: ApiFromModules<{
   env: typeof env;
   internalMutations: typeof internalMutations;
   notes: typeof notes;
+  organize: typeof organize;
   summarize: typeof summarize;
 }>;
 

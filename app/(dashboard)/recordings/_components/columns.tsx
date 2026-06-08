@@ -2,13 +2,14 @@
 
 import { ArrowUpDown } from 'lucide-react'
 import { formatDate } from '@/lib/utils'
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { type Column, type ColumnDef } from '@tanstack/react-table'
 import { type Id } from '@/convex/_generated/dataModel'
 import { StatusBadge, type NoteStatus } from '@/components/status-badge'
 import { DataTableRowActions } from './data-table-row-actions'
 
-interface Note {
+export interface NoteRow {
   _creationTime: number
   _id: Id<'notes'>
   audioFileId: string
@@ -18,13 +19,14 @@ interface Note {
   transcription?: string
   status?: NoteStatus
   userId: string
+  tags?: string[]
 }
 
 function SortableHeader({
   column,
   title,
 }: {
-  column: Column<Note, unknown>
+  column: Column<NoteRow, unknown>
   title: string
 }) {
   return (
@@ -39,7 +41,15 @@ function SortableHeader({
   )
 }
 
-export const columns: ColumnDef<Note>[] = [
+function HeaderLabel({ children }: { children: React.ReactNode }) {
+  return (
+    <span className="font-mono text-xs font-medium uppercase tracking-[0.15em] text-muted-foreground">
+      {children}
+    </span>
+  )
+}
+
+export const columns: ColumnDef<NoteRow>[] = [
   {
     accessorKey: 'title',
     header: ({ column }) => <SortableHeader column={column} title="Title" />,
@@ -53,12 +63,42 @@ export const columns: ColumnDef<Note>[] = [
     },
   },
   {
+    accessorKey: 'tags',
+    header: () => <HeaderLabel>Tags</HeaderLabel>,
+    enableSorting: false,
+    // Matches if the row carries any of the selected tags (OR semantics).
+    filterFn: (row, id, value: string[]) => {
+      if (!value || value.length === 0) return true
+      const tags = row.getValue<string[] | undefined>(id) ?? []
+      return value.some((v) => tags.includes(v))
+    },
+    cell: ({ row }) => {
+      const tags = row.original.tags ?? []
+      if (tags.length === 0)
+        return <span className="text-muted-foreground">—</span>
+      return (
+        <div className="flex max-w-[260px] flex-wrap gap-1">
+          {tags.slice(0, 3).map((tag) => (
+            <Badge
+              key={tag}
+              variant="secondary"
+              className="font-mono text-[10px] uppercase tracking-[0.08em]"
+            >
+              {tag}
+            </Badge>
+          ))}
+          {tags.length > 3 && (
+            <span className="text-xs text-muted-foreground">
+              +{tags.length - 3}
+            </span>
+          )}
+        </div>
+      )
+    },
+  },
+  {
     accessorKey: 'status',
-    header: () => (
-      <span className="font-mono text-xs font-medium uppercase tracking-[0.15em] text-muted-foreground">
-        Status
-      </span>
-    ),
+    header: () => <HeaderLabel>Status</HeaderLabel>,
     cell: ({ row }) => {
       const status = row.original.status ?? 'ready'
       return <StatusBadge status={status} />

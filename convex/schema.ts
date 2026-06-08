@@ -50,6 +50,9 @@ export default defineSchema({
         v.literal('blog')
       )
     ),
+    // Free-form labels the user attaches for organizing/filtering. Absent on
+    // old notes; UI defaults to []. Folded into searchBlob so tags are findable.
+    tags: v.optional(v.array(v.string())),
   })
     .index('by_userId', ['userId'])
     .index('by_shareId', ['shareId'])

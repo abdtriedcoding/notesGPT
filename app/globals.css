@@ -194,3 +194,18 @@
     );
   }
 }
+
+/* Print: show only the clean PrintableNote, hide app chrome. The detail
+   page wraps its interactive UI in .print:hidden; nav/footer/toasts are hidden
+   here so "Save as PDF" produces a clean, single document. */
+@media print {
+  nav,
+  footer,
+  [data-sonner-toaster] {
+    display: none !important;
+  }
+
+  body {
+    background: #fff !important;
+  }
+}
