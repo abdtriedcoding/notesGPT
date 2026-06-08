@@ -4,7 +4,6 @@ import Link from 'next/link'
 import { useQuery } from 'convex/react'
 import { useParams } from 'next/navigation'
 import { api } from '@/convex/_generated/api'
-import { type Id } from '@/convex/_generated/dataModel'
 
 import { Logo } from '@/components/logo'
 import NoteTabs from '@/components/note-tabs'
@@ -16,10 +15,10 @@ import { FileQuestion } from 'lucide-react'
 
 export default function SharePage() {
   const params = useParams()
-  const noteId = params.noteId as Id<'notes'>
+  const shareId = params.shareId as string
 
   const noteWithActionItems = useQuery(api.notes.getSharedNote, {
-    id: noteId,
+    shareId,
   })
 
   return (

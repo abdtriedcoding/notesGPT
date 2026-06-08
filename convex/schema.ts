@@ -18,11 +18,19 @@ export default defineSchema({
         v.literal('failed')
       )
     ),
-  }).index('by_userId', ['userId']),
+    // Opaque, unguessable token for the public /share route. Absent until the
+    // owner generates a share link. Existing rows have no shareId.
+    shareId: v.optional(v.string()),
+  })
+    .index('by_userId', ['userId'])
+    .index('by_shareId', ['shareId']),
   actionItems: defineTable({
     noteId: v.id('notes'),
     userId: v.string(),
     action: v.string(),
+    // Distinguishes AI-extracted items from manually added ones. Optional for
+    // migration safety: existing rows are treated as 'manual' by the UI.
+    source: v.optional(v.union(v.literal('ai'), v.literal('manual'))),
   })
     .index('by_noteId', ['noteId'])
     .index('by_userId', ['userId']),
