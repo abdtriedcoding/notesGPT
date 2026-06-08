@@ -1,5 +1,6 @@
 import { v } from 'convex/values'
 import { internal } from './_generated/api'
+import { NOTE_STATUS } from './constants'
 import { internalMutation } from './_generated/server'
 
 export const saveTranscript = internalMutation({
@@ -32,6 +33,18 @@ export const saveSummary = internalMutation({
     await ctx.db.patch(noteId, {
       summary,
       title,
+      status: NOTE_STATUS.READY,
+    })
+  },
+})
+
+export const markNoteFailed = internalMutation({
+  args: {
+    noteId: v.id('notes'),
+  },
+  handler: async (ctx, { noteId }) => {
+    await ctx.db.patch(noteId, {
+      status: NOTE_STATUS.FAILED,
     })
   },
 })

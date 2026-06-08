@@ -3,6 +3,8 @@
 import { v } from 'convex/values'
 import Groq from 'groq-sdk'
 import { internal } from './_generated/api'
+import { requireEnv } from './env'
+import { SUMMARY_MODEL, SUMMARY_SYSTEM_PROMPT } from './constants'
 import { internalAction } from './_generated/server'
 
 interface TranscriptSummary {
@@ -18,32 +20,31 @@ export const chat = internalAction({
   handler: async (ctx, args) => {
     const { noteId, transcript } = args
 
-    const groq = new Groq({ apiKey: process.env.GROQ_API_KEY! })
+    try {
+      const groq = new Groq({ apiKey: requireEnv('GROQ_API_KEY') })
 
-    const completion = await groq.chat.completions.create({
-      model: 'llama-3.3-70b-versatile',
-      response_format: { type: 'json_object' },
-      messages: [
-        {
-          role: 'system',
-          content:
-            'You are given a transcript of a voice message. Extract a short title and a concise summary. Respond ONLY with JSON in this exact shape: {"title": "string", "summary": "string"}',
-        },
-        {
-          role: 'user',
-          content: `Here is the transcript:\n${transcript}`,
-        },
-      ],
-    })
+      const completion = await groq.chat.completions.create({
+        model: SUMMARY_MODEL,
+        response_format: { type: 'json_object' },
+        messages: [
+          { role: 'system', content: SUMMARY_SYSTEM_PROMPT },
+          { role: 'user', content: `Here is the transcript:\n${transcript}` },
+        ],
+      })
 
-    const text = completion.choices[0]?.message?.content || '{}'
-    const data: TranscriptSummary = JSON.parse(text)
-    const { summary, title } = data
+      const raw = completion.choices[0]?.message?.content || '{}'
+      const data = JSON.parse(raw) as Partial<TranscriptSummary>
 
-    await ctx.runMutation(internal.internalMutations.saveSummary, {
-      noteId,
-      summary,
-      title,
-    })
+      await ctx.runMutation(internal.internalMutations.saveSummary, {
+        noteId,
+        title: data.title?.trim() || 'Untitled note',
+        summary: data.summary?.trim() || 'No summary available.',
+      })
+    } catch (error) {
+      console.error('Summarization failed:', error)
+      await ctx.runMutation(internal.internalMutations.markNoteFailed, {
+        noteId,
+      })
+    }
   },
 })

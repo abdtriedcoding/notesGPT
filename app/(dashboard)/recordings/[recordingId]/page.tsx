@@ -1,51 +1,68 @@
 'use client'
 
+import Link from 'next/link'
 import { useQuery } from 'convex/react'
-import { useParams } from 'next/navigation'
+import { notFound, useParams } from 'next/navigation'
+import { ChevronLeft } from 'lucide-react'
 import { api } from '@/convex/_generated/api'
-import { type Doc, type Id } from '@/convex/_generated/dataModel'
+import { type Id } from '@/convex/_generated/dataModel'
 
-import NoteCard from './_components/note-card'
-import ActionForm from './_components/action-form'
-import { ActionItemSkelton } from '@/components/skeltons'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-
-interface NoteWithActionItem {
-  note: Doc<'notes'>
-  actionItems: Doc<'actionItems'>[]
-}
+import NoteTabs from '@/components/note-tabs'
+import { Button } from '@/components/ui/button'
+import { StatusBadge } from '@/components/status-badge'
+import { ActionItemSkeleton } from '@/components/skeletons'
+import ShareNoteModal from '@/components/share-note-modal'
 
 export default function RecordingIdPage() {
   const params = useParams()
-  const { recordingId } = params
+  const recordingId = params.recordingId as Id<'notes'>
 
   const noteWithActionItems = useQuery(api.notes.getNoteById, {
-    id: recordingId as Id<'notes'>,
+    id: recordingId,
   })
 
   if (noteWithActionItems === undefined) {
-    return <ActionItemSkelton />
+    return (
+      <div className="mx-auto w-full max-w-2xl px-4 py-8 sm:px-6">
+        <Button asChild variant="ghost" size="sm" className="mb-4 -ml-2">
+          <Link href="/recordings">
+            <ChevronLeft className="mr-1 h-4 w-4" />
+            Back to recordings
+          </Link>
+        </Button>
+        <ActionItemSkeleton />
+      </div>
+    )
   }
 
-  const { note, actionItems }: NoteWithActionItem = noteWithActionItems
+  if (noteWithActionItems === null) {
+    notFound()
+  }
+
+  const { note, actionItems } = noteWithActionItems
+  const status = note.status ?? 'ready'
 
   return (
-    <>
-      <Tabs defaultValue="transcript" className="mx-auto max-w-xl text-center">
-        <TabsList className="mb-4">
-          <TabsTrigger value="transcript">Transcript</TabsTrigger>
-          <TabsTrigger value="summary">Summary</TabsTrigger>
-          <TabsTrigger value="actionItem">Action Items</TabsTrigger>
-        </TabsList>
-        <TabsContent value="transcript">{note?.transcription}</TabsContent>
-        <TabsContent value="summary">{note?.summary}</TabsContent>
-        <TabsContent className="space-y-4" value="actionItem">
-          <ActionForm id={note._id} />
-          {actionItems.map((item) => (
-            <NoteCard key={item._id} {...item} title={note.title} />
-          ))}
-        </TabsContent>
-      </Tabs>
-    </>
+    <div className="mx-auto w-full max-w-2xl px-4 py-8 sm:px-6">
+      <Button asChild variant="ghost" size="sm" className="mb-4 -ml-2">
+        <Link href="/recordings">
+          <ChevronLeft className="mr-1 h-4 w-4" />
+          Back to recordings
+        </Link>
+      </Button>
+
+      <div className="mb-8 flex items-start justify-between gap-4">
+        <div className="space-y-3">
+          <p className="eyebrow">Recording</p>
+          <h1 className="text-3xl font-medium tracking-tight sm:text-4xl">
+            {note.title ?? 'Untitled note'}
+          </h1>
+          <StatusBadge status={status} />
+        </div>
+        <ShareNoteModal noteId={note._id} />
+      </div>
+
+      <NoteTabs note={note} actionItems={actionItems} />
+    </div>
   )
 }

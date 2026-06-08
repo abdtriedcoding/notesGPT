@@ -9,26 +9,33 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
+import { buttonVariants } from '@/components/ui/button'
 
-interface DeleteModelProp {
+interface DeleteModalProps {
   children: React.ReactNode
   onConfirm: () => void
 }
 
-export function DeleteModel({ children, onConfirm }: DeleteModelProp) {
+export function DeleteModal({ children, onConfirm }: DeleteModalProps) {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>{children}</AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+          <AlertDialogTitle>Delete this note?</AlertDialogTitle>
           <AlertDialogDescription>
-            This action cannot be undone.
+            This permanently removes the note, its transcript, summary, and
+            action items. This action cannot be undone.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={onConfirm}>Delete</AlertDialogAction>
+          <AlertDialogAction
+            onClick={onConfirm}
+            className={buttonVariants({ variant: 'destructive' })}
+          >
+            Delete
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

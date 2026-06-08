@@ -1,120 +1,140 @@
 'use client'
 
-import Image from 'next/image'
-import { useEffect, useState } from 'react'
+import { toast } from 'sonner'
+import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { Loader2, Mic, Square } from 'lucide-react'
 import { formatTime, getCurrentFormattedDate } from '@/lib/utils'
 
 import { useMutation } from 'convex/react'
 import { api } from '@/convex/_generated/api'
 
+type RecordState = 'idle' | 'recording' | 'uploading'
+
+const STATE_LABEL: Record<RecordState, string> = {
+  idle: 'Record a voice note',
+  recording: 'Listening…',
+  uploading: 'Processing your note…',
+}
+
 export default function RecordPage() {
   const router = useRouter()
-  const [isRunning, setIsRunning] = useState(false)
+  const [state, setState] = useState<RecordState>('idle')
   const [totalSeconds, setTotalSeconds] = useState(0)
-  const [mediaRecorder, setMediaRecorder] = useState<MediaRecorder | null>(null)
-  const [title, setTitle] = useState('Record your voice note')
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null)
 
   const generateUploadUrl = useMutation(api.notes.generateUploadUrl)
   const createNote = useMutation(api.notes.createNote)
 
   useEffect(() => {
-    let interval: NodeJS.Timeout
-
-    if (isRunning) {
-      interval = setInterval(() => {
-        setTotalSeconds((prevTotalSeconds) => prevTotalSeconds + 1)
-      }, 1000)
-    }
-
+    if (state !== 'recording') return
+    const interval = setInterval(
+      () => setTotalSeconds((prev) => prev + 1),
+      1000
+    )
     return () => clearInterval(interval)
-  }, [isRunning])
+  }, [state])
 
   async function startRecording() {
-    setIsRunning(true)
-    const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
-    const recorder = new MediaRecorder(stream)
-    const audioChunks: Blob[] = []
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
+      const recorder = new MediaRecorder(stream)
+      const audioChunks: Blob[] = []
 
-    recorder.ondataavailable = (e) => {
-      audioChunks.push(e.data)
-    }
+      recorder.ondataavailable = (e) => audioChunks.push(e.data)
 
-    recorder.onstop = async () => {
-      const mimeType = recorder.mimeType || 'audio/webm'
-      const audioBlob = new Blob(audioChunks, { type: mimeType })
-      const postUrl = await generateUploadUrl()
-      const result = await fetch(postUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': mimeType },
-        body: audioBlob,
-      })
-      const { storageId } = await result.json()
-      const noteId = await createNote({ storageId })
-      router.push(`/recordings/${noteId}`)
+      recorder.onstop = async () => {
+        stream.getTracks().forEach((track) => track.stop())
+        setState('uploading')
+        try {
+          const mimeType = recorder.mimeType || 'audio/webm'
+          const audioBlob = new Blob(audioChunks, { type: mimeType })
+          const postUrl = await generateUploadUrl()
+          const result = await fetch(postUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': mimeType },
+            body: audioBlob,
+          })
+          if (!result.ok) {
+            throw new Error('Upload failed. Please try again.')
+          }
+          const { storageId } = await result.json()
+          const noteId = await createNote({ storageId })
+          router.push(`/recordings/${noteId}`)
+        } catch (error) {
+          setState('idle')
+          setTotalSeconds(0)
+          toast.error(
+            error instanceof Error
+              ? error.message
+              : 'Something went wrong saving your note.'
+          )
+        }
+      }
+
+      mediaRecorderRef.current = recorder
+      setTotalSeconds(0)
+      setState('recording')
+      recorder.start()
+    } catch {
+      toast.error(
+        'Microphone access was blocked. Enable it in your browser settings and try again.'
+      )
     }
-    setMediaRecorder(recorder)
-    recorder.start()
   }
 
   function stopRecording() {
-    mediaRecorder?.stop()
-    setIsRunning(false)
+    mediaRecorderRef.current?.stop()
   }
 
-  const handleRecordClick = async () => {
-    if (title === 'Record your voice note') {
-      setTitle('Recording...')
-      await startRecording()
-    } else if (title === 'Recording...') {
-      setTitle('Processing...')
-      stopRecording()
-    }
+  const handleClick = () => {
+    if (state === 'idle') void startRecording()
+    else if (state === 'recording') stopRecording()
   }
 
   return (
-    <div className="flex flex-col items-center space-y-4">
-      <h1 className="text-xl font-medium md:text-4xl">{title}</h1>
-      <p className="text-gray-400">{getCurrentFormattedDate()}</p>
-      <div className="py-20">
-        <div className="relative mx-auto flex h-[316px] w-[316px] items-center justify-center">
+    <div className="mx-auto flex w-full max-w-2xl flex-col items-center px-4 py-12">
+      <h1 className="text-3xl font-medium tracking-tight sm:text-4xl">
+        {STATE_LABEL[state]}
+      </h1>
+      <p className="mt-2 font-mono text-xs uppercase tracking-[0.15em] text-muted-foreground">
+        {getCurrentFormattedDate()}
+      </p>
+
+      <div className="py-16">
+        <div className="relative mx-auto flex h-[280px] w-[280px] items-center justify-center sm:h-[316px] sm:w-[316px]">
           <div
-            className={`recording-box absolute h-full w-full rounded-[50%] p-[12%] pt-[17%] ${
-              title === 'Recording...' ? 'record-animation' : ''
+            className={`recording-box absolute h-full w-full rounded-full opacity-90 ${
+              state === 'recording' ? 'record-animation' : ''
             }`}
-          >
-            <div
-              className="h-full w-full rounded-[50%]"
-              style={{ background: 'linear-gradient(#E31C1CD6, #003EB6CC)' }}
-            />
-          </div>
-          <div className="z-20 flex h-fit w-fit flex-col items-center justify-center">
-            <h1 className="text-light text-[60px] leading-[114.3%] tracking-[-1.5px]">
+          />
+          <div className="absolute flex h-[88%] w-[88%] items-center justify-center rounded-full bg-background">
+            <span className="font-mono text-5xl font-semibold tabular-nums sm:text-6xl">
               {formatTime(Math.floor(totalSeconds / 60))}:
               {formatTime(totalSeconds % 60)}
-            </h1>
+            </span>
           </div>
         </div>
       </div>
-      <button onClick={handleRecordClick}>
-        {!isRunning ? (
-          <Image
-            src={'/nonrecording_mic.svg'}
-            alt="recording mic"
-            width={148}
-            height={148}
-            className="h-[70px] w-[70px] md:h-[100px] md:w-[100px]"
-          />
-        ) : (
-          <Image
-            src={'/recording_mic.svg'}
-            alt="recording mic"
-            width={148}
-            height={148}
-            className="h-[70px] w-[70px] animate-pulse transition md:h-[100px] md:w-[100px]"
-          />
+
+      <button
+        onClick={handleClick}
+        disabled={state === 'uploading'}
+        className="flex h-20 w-20 items-center justify-center rounded-full bg-brand-gradient text-white shadow-soft-lg transition-transform hover:scale-105 disabled:cursor-not-allowed disabled:opacity-70 sm:h-24 sm:w-24"
+        aria-label={state === 'recording' ? 'Stop recording' : 'Start recording'}
+      >
+        {state === 'idle' && <Mic className="h-8 w-8" />}
+        {state === 'recording' && (
+          <Square className="h-7 w-7 fill-current" />
         )}
+        {state === 'uploading' && <Loader2 className="h-8 w-8 animate-spin" />}
       </button>
+
+      <p className="mt-6 text-sm text-muted-foreground">
+        {state === 'idle' && 'Tap the mic and start speaking'}
+        {state === 'recording' && 'Tap again to stop and transcribe'}
+        {state === 'uploading' && 'Hang tight, this only takes a moment'}
+      </p>
     </div>
   )
 }

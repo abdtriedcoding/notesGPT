@@ -69,7 +69,7 @@ const SkeletonOne = () => {
         variants={variants}
         className="flex flex-row items-center space-x-2 rounded-full border border-neutral-100 bg-white p-2 dark:border-white/[0.2] dark:bg-black"
       >
-        <div className="h-6 w-6 flex-shrink-0 rounded-full bg-gradient-to-r from-pink-500 to-violet-500" />
+        <div className="h-6 w-6 flex-shrink-0 rounded-full bg-brand-gradient" />
         <div className="h-4 w-full rounded-full bg-gray-100 dark:bg-neutral-900" />
       </motion.div>
       <motion.div
@@ -77,13 +77,13 @@ const SkeletonOne = () => {
         className="ml-auto flex w-3/4 flex-row items-center space-x-2 rounded-full border border-neutral-100 bg-white p-2 dark:border-white/[0.2] dark:bg-black"
       >
         <div className="h-4 w-full rounded-full bg-gray-100 dark:bg-neutral-900" />
-        <div className="h-6 w-6 flex-shrink-0 rounded-full bg-gradient-to-r from-pink-500 to-violet-500" />
+        <div className="h-6 w-6 flex-shrink-0 rounded-full bg-brand-gradient" />
       </motion.div>
       <motion.div
         variants={variants}
         className="flex flex-row items-center space-x-2 rounded-full border border-neutral-100 bg-white p-2 dark:border-white/[0.2] dark:bg-black"
       >
-        <div className="h-6 w-6 flex-shrink-0 rounded-full bg-gradient-to-r from-pink-500 to-violet-500" />
+        <div className="h-6 w-6 flex-shrink-0 rounded-full bg-brand-gradient" />
         <div className="h-4 w-full rounded-full bg-gray-100 dark:bg-neutral-900" />
       </motion.div>
     </motion.div>
@@ -150,7 +150,7 @@ const SkeletonThree = () => {
       className="dark:bg-dot-white/[0.2] bg-dot-black/[0.2] flex h-full min-h-[6rem] w-full flex-1 flex-col space-y-2 rounded-lg"
       style={{
         background:
-          'linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab)',
+          'linear-gradient(-45deg, #f59e0b, #ea580c, #d97706, #f59e0b)',
         backgroundSize: '400% 400%',
       }}
     >
@@ -192,7 +192,7 @@ const SkeletonFour = () => {
       >
         <XCircle className="h-10 w-10" />
         <p className="mt-4 text-center text-xs font-semibold text-neutral-500 sm:text-sm">
-          You are not going to able to organize notes easily ?
+          Struggling to organize your notes?
         </p>
         <p className="mt-4 rounded-full border border-red-500 bg-red-100 px-2 py-0.5 text-xs text-red-600 dark:bg-red-900/20">
           Take Action
@@ -213,7 +213,7 @@ const SkeletonFour = () => {
       >
         <Frown className="h-10 w-10" />
         <p className="mt-4 text-center text-xs font-semibold text-neutral-500 sm:text-sm">
-          Your going to miss your goal this month
+          You&apos;re about to miss your goal this month
         </p>
         <p className="mt-4 rounded-full border border-orange-500 bg-orange-100 px-2 py-0.5 text-xs text-orange-600 dark:bg-orange-900/20">
           Helpless
@@ -260,7 +260,7 @@ const SkeletonFive = () => {
       >
         <User className="h-10 w-10" />
         <p className="text-xs text-neutral-500">
-          How can i manage my notes or daily notes efficiently ?
+          How can I manage my daily notes efficiently?
         </p>
       </motion.div>
       <motion.div
@@ -268,7 +268,7 @@ const SkeletonFive = () => {
         className="ml-auto flex w-3/4 flex-row items-center justify-end space-x-2 rounded-full border border-neutral-100 bg-white p-2 dark:border-white/[0.2] dark:bg-black"
       >
         <p className="text-xs text-neutral-500">Use NotesGPT.</p>
-        <div className="h-6 w-6 flex-shrink-0 rounded-full bg-gradient-to-r from-pink-500 to-violet-500" />
+        <div className="h-6 w-6 flex-shrink-0 rounded-full bg-brand-gradient" />
       </motion.div>
     </motion.div>
   )
@@ -283,7 +283,7 @@ const items = [
     ),
     header: <SkeletonOne />,
     className: 'md:col-span-1',
-    icon: <Mic className="h-4 w-4 text-neutral-500" />,
+    icon: <Mic className="h-4 w-4" />,
   },
   {
     title: 'Streamlined Organization',
@@ -295,7 +295,7 @@ const items = [
     ),
     header: <SkeletonTwo />,
     className: 'md:col-span-1',
-    icon: <File className="h-4 w-4 text-neutral-500" />,
+    icon: <File className="h-4 w-4" />,
   },
   {
     title: 'Instant Note Generation',
@@ -306,7 +306,7 @@ const items = [
     ),
     header: <SkeletonThree />,
     className: 'md:col-span-1',
-    icon: <Lightbulb className="h-4 w-4 text-neutral-500" />,
+    icon: <Lightbulb className="h-4 w-4" />,
   },
   {
     title: 'Add task Setting and Tracking',
@@ -318,7 +318,7 @@ const items = [
     ),
     header: <SkeletonFour />,
     className: 'md:col-span-2',
-    icon: <Goal className="h-4 w-4 text-neutral-500" />,
+    icon: <Goal className="h-4 w-4" />,
   },
 
   {
@@ -328,6 +328,6 @@ const items = [
     ),
     header: <SkeletonFive />,
     className: 'md:col-span-1',
-    icon: <Box className="h-4 w-4 text-neutral-500" />,
+    icon: <Box className="h-4 w-4" />,
   },
 ]

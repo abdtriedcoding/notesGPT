@@ -1,50 +1,68 @@
 'use client'
 
+import Link from 'next/link'
 import { useQuery } from 'convex/react'
 import { useParams } from 'next/navigation'
 import { api } from '@/convex/_generated/api'
-import { type Doc, type Id } from '@/convex/_generated/dataModel'
+import { type Id } from '@/convex/_generated/dataModel'
 
-import { ActionItemSkelton, EmptyState } from '@/components/skeltons'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import NoteCard from '@/app/(dashboard)/recordings/[recordingId]/_components/note-card'
-
-interface NoteWithActionItem {
-  note: Doc<'notes'>
-  actionItems: Doc<'actionItems'>[]
-}
+import { Logo } from '@/components/logo'
+import NoteTabs from '@/components/note-tabs'
+import { Button } from '@/components/ui/button'
+import { StatusBadge } from '@/components/status-badge'
+import { EmptyState } from '@/components/empty-state'
+import { ActionItemSkeleton } from '@/components/skeletons'
+import { FileQuestion } from 'lucide-react'
 
 export default function SharePage() {
   const params = useParams()
-  const { noteId } = params
+  const noteId = params.noteId as Id<'notes'>
 
-  const noteWithActionItems = useQuery(api.notes.getNoteById, {
-    id: noteId as Id<'notes'>,
+  const noteWithActionItems = useQuery(api.notes.getSharedNote, {
+    id: noteId,
   })
 
-  if (noteWithActionItems === undefined) {
-    return <ActionItemSkelton />
-  }
-
-  const { note, actionItems }: NoteWithActionItem = noteWithActionItems
   return (
-    <Tabs defaultValue="transcript" className="mx-auto max-w-xl text-center">
-      <TabsList className="mb-4">
-        <TabsTrigger value="transcript">Transcript</TabsTrigger>
-        <TabsTrigger value="summary">Summary</TabsTrigger>
-        <TabsTrigger value="actionItem">Action Items</TabsTrigger>
-      </TabsList>
-      <TabsContent value="transcript">{note?.transcription}</TabsContent>
-      <TabsContent value="summary">{note?.summary}</TabsContent>
-      <TabsContent className="space-y-4" value="actionItem">
-        {actionItems.length > 0 ? (
-          actionItems.map((item) => (
-            <NoteCard key={item._id} {...item} title={note.title} preview />
-          ))
+    <div className="min-h-screen">
+      <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b bg-background/60 px-4 backdrop-blur-xl sm:px-6">
+        <Logo />
+        <Button asChild size="sm">
+          <Link href="/">Create your own →</Link>
+        </Button>
+      </header>
+
+      <main className="mx-auto w-full max-w-2xl px-4 py-8 sm:px-6">
+        {noteWithActionItems === undefined ? (
+          <ActionItemSkeleton />
+        ) : noteWithActionItems === null ? (
+          <EmptyState
+            icon={FileQuestion}
+            title="This note isn’t available"
+            description="The link may be broken or the note was deleted."
+            action={
+              <Button asChild>
+                <Link href="/">Go to NotesGPT</Link>
+              </Button>
+            }
+            className="mt-10"
+          />
         ) : (
-          <EmptyState />
+          <>
+            <div className="mb-8 space-y-3">
+              <p className="eyebrow">Shared via NotesGPT</p>
+              <h1 className="text-3xl font-medium tracking-tight sm:text-4xl">
+                {noteWithActionItems.note.title ?? 'Untitled note'}
+              </h1>
+              <StatusBadge status={noteWithActionItems.note.status ?? 'ready'} />
+            </div>
+            <NoteTabs
+              note={noteWithActionItems.note}
+              actionItems={noteWithActionItems.actionItems}
+              readOnly
+            />
+          </>
         )}
-      </TabsContent>
-    </Tabs>
+      </main>
+    </div>
   )
 }
