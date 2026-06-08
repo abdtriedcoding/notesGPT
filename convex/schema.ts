@@ -25,6 +25,31 @@ export default defineSchema({
     // write, powering full-text search. Optional: old rows are absent until
     // re-processed/edited or backfilled.
     searchBlob: v.optional(v.string()),
+    // Speaker-diarized segments (one per speaker turn). start/end are in
+    // milliseconds. Absent when diarization wasn't available for the audio.
+    utterances: v.optional(
+      v.array(
+        v.object({
+          speaker: v.string(),
+          text: v.string(),
+          start: v.number(),
+          end: v.number(),
+        })
+      )
+    ),
+    // Detected spoken-language code (e.g. 'en', 'es'). Absent on old notes.
+    language: v.optional(v.string()),
+    // The summary style chosen for this note. Absent = 'default'.
+    template: v.optional(
+      v.union(
+        v.literal('default'),
+        v.literal('meeting'),
+        v.literal('lecture'),
+        v.literal('journal'),
+        v.literal('email'),
+        v.literal('blog')
+      )
+    ),
   })
     .index('by_userId', ['userId'])
     .index('by_shareId', ['shareId'])

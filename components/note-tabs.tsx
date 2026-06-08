@@ -1,6 +1,7 @@
 'use client'
 
 import { toast } from 'sonner'
+import { type RefObject } from 'react'
 import { useMutation } from 'convex/react'
 import { Loader2, AlertCircle, ListTodo, RotateCw } from 'lucide-react'
 import { api } from '@/convex/_generated/api'
@@ -14,11 +15,13 @@ import { EmptyState } from '@/components/empty-state'
 import NoteCard from '@/app/(dashboard)/recordings/[recordingId]/_components/note-card'
 import ActionForm from '@/app/(dashboard)/recordings/[recordingId]/_components/action-form'
 import { EditableField } from '@/app/(dashboard)/recordings/[recordingId]/_components/editable-field'
+import { TranscriptView } from '@/app/(dashboard)/recordings/[recordingId]/_components/transcript-view'
 
 interface NoteTabsProps {
   note: Doc<'notes'>
   actionItems: Doc<'actionItems'>[]
   readOnly?: boolean
+  audioRef?: RefObject<HTMLAudioElement | null>
 }
 
 function ProcessingState({ label }: { label: string }) {
@@ -77,6 +80,7 @@ export default function NoteTabs({
   note,
   actionItems,
   readOnly = false,
+  audioRef,
 }: NoteTabsProps) {
   const isProcessing = note.status === 'processing'
   const isFailed = note.status === 'failed'
@@ -88,6 +92,19 @@ export default function NoteTabs({
   ) => {
     if (isFailed) return <FailedState noteId={note._id} readOnly={readOnly} />
     if (isProcessing) return <ProcessingState label={processingLabel} />
+
+    // Diarized transcript: show speaker-labeled, click-to-seek segments.
+    if (
+      field === 'transcription' &&
+      note.utterances &&
+      note.utterances.length > 0
+    ) {
+      return (
+        <div className="rounded-xl border bg-card p-5 shadow-soft sm:p-6">
+          <TranscriptView utterances={note.utterances} audioRef={audioRef} />
+        </div>
+      )
+    }
     return (
       <div className="rounded-xl border bg-card p-5 shadow-soft sm:p-6">
         {readOnly ? (

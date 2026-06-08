@@ -7,7 +7,7 @@ import { requireEnv } from './env'
 import {
   MAX_ACTION_ITEMS,
   SUMMARY_MODEL,
-  SUMMARY_SYSTEM_PROMPT,
+  SUMMARY_PROMPTS,
 } from './constants'
 import { internalAction } from './_generated/server'
 
@@ -37,13 +37,23 @@ export const chat = internalAction({
     const { noteId, transcript } = args
 
     try {
+      const meta = await ctx.runQuery(
+        internal.internalMutations.getNoteMeta,
+        { noteId }
+      )
+      const template = meta?.template ?? 'default'
+      const systemPrompt = SUMMARY_PROMPTS[template] ?? SUMMARY_PROMPTS.default
+      const languageDirective = meta?.language
+        ? ` Write the title and summary in the same language as the transcript (detected: ${meta.language}).`
+        : ''
+
       const groq = new Groq({ apiKey: requireEnv('GROQ_API_KEY') })
 
       const completion = await groq.chat.completions.create({
         model: SUMMARY_MODEL,
         response_format: { type: 'json_object' },
         messages: [
-          { role: 'system', content: SUMMARY_SYSTEM_PROMPT },
+          { role: 'system', content: systemPrompt + languageDirective },
           { role: 'user', content: `Here is the transcript:\n${transcript}` },
         ],
       })
