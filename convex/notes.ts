@@ -1,6 +1,6 @@
 import { v } from 'convex/values'
 import { internal } from './_generated/api'
-import { NOTE_STATUS } from './constants'
+import { NOTE_STATUS, buildSearchBlob } from './constants'
 import { mutation, query } from './_generated/server'
 
 export const generateUploadUrl = mutation(async (ctx) => {
@@ -214,6 +214,7 @@ export const updateNoteFields = mutation({
       title?: string
       summary?: string
       transcription?: string
+      searchBlob?: string
     } = {}
     if (title !== undefined && title.trim().length > 0) {
       patch.title = title.trim()
@@ -221,7 +222,38 @@ export const updateNoteFields = mutation({
     if (summary !== undefined) patch.summary = summary
     if (transcription !== undefined) patch.transcription = transcription
 
+    // Recompute the search blob from the merged result so edits stay findable.
+    patch.searchBlob = buildSearchBlob({
+      title: patch.title ?? note.title,
+      summary: patch.summary ?? note.summary,
+      transcription: patch.transcription ?? note.transcription,
+    })
+
     await ctx.db.patch(id, patch)
+  },
+})
+
+// Full-text search across the user's own notes (title + summary + transcript)
+// via the search_blob index. Returns the most relevant notes.
+export const searchNotes = query({
+  args: {
+    query: v.string(),
+  },
+  handler: async (ctx, { query: searchQuery }) => {
+    const identity = await ctx.auth.getUserIdentity()
+    if (!identity) {
+      throw new Error('Not authenticated')
+    }
+    const userId = identity.subject
+    const trimmed = searchQuery.trim()
+    if (trimmed.length === 0) return []
+
+    return await ctx.db
+      .query('notes')
+      .withSearchIndex('search_blob', (q) =>
+        q.search('searchBlob', trimmed).eq('userId', userId)
+      )
+      .take(20)
   },
 })
 
