@@ -243,6 +243,7 @@ export const updateNoteFields = mutation({
       title: patch.title ?? note.title,
       summary: patch.summary ?? note.summary,
       transcription: patch.transcription ?? note.transcription,
+      tags: note.tags,
     })
 
     await ctx.db.patch(id, patch)

@@ -67,14 +67,20 @@ export const SUMMARY_PROMPTS: Record<NoteTemplate, string> = {
 }
 
 // Builds the full-text search blob for a note from its text fields. Kept in
-// one place so every write path (transcript, summary, manual edit) produces a
-// consistent index value.
+// one place so every write path (transcript, summary, manual edit, tag edit)
+// produces a consistent index value. Tags are appended so they're searchable.
 export function buildSearchBlob(fields: {
   title?: string
   summary?: string
   transcription?: string
+  tags?: string[]
 }): string {
-  return [fields.title, fields.summary, fields.transcription]
+  return [
+    fields.title,
+    fields.summary,
+    fields.transcription,
+    fields.tags?.join(' '),
+  ]
     .filter((part): part is string => Boolean(part && part.trim().length > 0))
     .join('\n')
 }

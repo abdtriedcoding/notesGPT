@@ -32,6 +32,7 @@ export const saveTranscript = internalMutation({
         title: note?.title,
         summary: note?.summary,
         transcription: transcript,
+        tags: note?.tags,
       }),
     })
 
@@ -76,6 +77,7 @@ export const saveSummary = internalMutation({
         title,
         summary,
         transcription: note.transcription,
+        tags: note.tags,
       }),
     })
 
