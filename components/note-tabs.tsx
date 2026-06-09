@@ -11,6 +11,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { EmptyState } from '@/components/empty-state'
 import NoteCard from '@/app/(dashboard)/recordings/[recordingId]/_components/note-card'
 import ActionForm from '@/app/(dashboard)/recordings/[recordingId]/_components/action-form'
+import { EditableField } from '@/app/(dashboard)/recordings/[recordingId]/_components/editable-field'
 
 interface NoteTabsProps {
   note: Doc<'notes'>
@@ -79,6 +80,7 @@ export default function NoteTabs({
   const isFailed = note.status === 'failed'
 
   const renderContent = (
+    field: 'transcription' | 'summary',
     content: string | undefined,
     processingLabel: string
   ) => {
@@ -86,9 +88,19 @@ export default function NoteTabs({
     if (isProcessing) return <ProcessingState label={processingLabel} />
     return (
       <div className="rounded-xl border bg-card p-5 shadow-soft sm:p-6">
-        <div className="whitespace-pre-wrap text-left text-[15px] leading-relaxed text-foreground/90">
-          {content && content.length > 0 ? content : 'Nothing here yet.'}
-        </div>
+        {readOnly ? (
+          <div className="whitespace-pre-wrap text-left text-[15px] leading-relaxed text-foreground/90">
+            {content && content.length > 0 ? content : 'Nothing here yet.'}
+          </div>
+        ) : (
+          <EditableField
+            noteId={note._id}
+            field={field}
+            value={content ?? ''}
+            multiline
+            className="text-left text-[15px] leading-relaxed text-foreground/90"
+          />
+        )}
       </div>
     )
   }
@@ -102,11 +114,15 @@ export default function NoteTabs({
       </TabsList>
 
       <TabsContent value="transcript" className="mt-6">
-        {renderContent(note.transcription, 'Transcribing your audio…')}
+        {renderContent(
+          'transcription',
+          note.transcription,
+          'Transcribing your audio…'
+        )}
       </TabsContent>
 
       <TabsContent value="summary" className="mt-6">
-        {renderContent(note.summary, 'Generating your summary…')}
+        {renderContent('summary', note.summary, 'Generating your summary…')}
       </TabsContent>
 
       <TabsContent value="actionItem" className="mt-6 space-y-4">

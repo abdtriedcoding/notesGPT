@@ -186,6 +186,45 @@ export const reprocessNote = mutation({
   },
 })
 
+// Lets the owner correct AI output by editing the note's text fields. Only the
+// fields provided are patched; an empty/blank title is ignored to avoid wiping
+// it. Used by the inline editors on the recording detail page.
+export const updateNoteFields = mutation({
+  args: {
+    id: v.id('notes'),
+    title: v.optional(v.string()),
+    summary: v.optional(v.string()),
+    transcription: v.optional(v.string()),
+  },
+  handler: async (ctx, { id, title, summary, transcription }) => {
+    const identity = await ctx.auth.getUserIdentity()
+    if (!identity) {
+      throw new Error('Not authenticated')
+    }
+
+    const note = await ctx.db.get(id)
+    if (!note) {
+      throw new Error('Note not found')
+    }
+    if (note.userId !== identity.subject) {
+      throw new Error('Not your note')
+    }
+
+    const patch: {
+      title?: string
+      summary?: string
+      transcription?: string
+    } = {}
+    if (title !== undefined && title.trim().length > 0) {
+      patch.title = title.trim()
+    }
+    if (summary !== undefined) patch.summary = summary
+    if (transcription !== undefined) patch.transcription = transcription
+
+    await ctx.db.patch(id, patch)
+  },
+})
+
 export const removeNote = mutation({
   args: {
     id: v.id('notes'),

@@ -12,6 +12,8 @@ import { Button } from '@/components/ui/button'
 import { StatusBadge } from '@/components/status-badge'
 import { ActionItemSkeleton } from '@/components/skeletons'
 import ShareNoteModal from '@/components/share-note-modal'
+import { AudioPlayer } from './_components/audio-player'
+import { EditableField } from './_components/editable-field'
 
 export default function RecordingIdPage() {
   const params = useParams()
@@ -51,16 +53,26 @@ export default function RecordingIdPage() {
         </Link>
       </Button>
 
-      <div className="mb-8 flex items-start justify-between gap-4">
-        <div className="space-y-3">
+      <div className="mb-6 flex items-start justify-between gap-4">
+        <div className="min-w-0 flex-1 space-y-3">
           <p className="eyebrow">Recording</p>
-          <h1 className="text-3xl font-medium tracking-tight sm:text-4xl">
-            {note.title ?? 'Untitled note'}
-          </h1>
+          <EditableField
+            noteId={note._id}
+            field="title"
+            value={note.title ?? ''}
+            placeholder="Untitled note"
+            className="text-3xl font-medium tracking-tight sm:text-4xl"
+          />
           <StatusBadge status={status} />
         </div>
         <ShareNoteModal noteId={note._id} />
       </div>
+
+      {note.audioFileUrl && (
+        <div className="mb-8">
+          <AudioPlayer src={note.audioFileUrl} />
+        </div>
+      )}
 
       <NoteTabs note={note} actionItems={actionItems} />
     </div>

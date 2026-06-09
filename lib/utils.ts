@@ -22,6 +22,17 @@ export function formatTime(time: number): string {
   return time < 10 ? `0${time}` : `${time}`
 }
 
+// Formats a number of seconds as m:ss (or h:mm:ss) for an audio player readout.
+export function formatDuration(totalSeconds: number): string {
+  if (!Number.isFinite(totalSeconds) || totalSeconds < 0) return '0:00'
+  const seconds = Math.floor(totalSeconds % 60)
+  const minutes = Math.floor((totalSeconds / 60) % 60)
+  const hours = Math.floor(totalSeconds / 3600)
+  const mm = hours > 0 ? formatTime(minutes) : `${minutes}`
+  if (hours > 0) return `${hours}:${formatTime(minutes)}:${formatTime(seconds)}`
+  return `${mm}:${formatTime(seconds)}`
+}
+
 export function formatDate(timestamp: number) {
   const date = new Date(timestamp)
   const options: Intl.DateTimeFormatOptions = {
