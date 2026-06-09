@@ -32,7 +32,7 @@ export function EmptyState({
           <Icon className="h-6 w-6" />
         </span>
       )}
-      <h3 className="relative font-display text-xl font-semibold tracking-tight">
+      <h3 className="relative font-sans text-xl font-semibold tracking-tight">
         {title}
       </h3>
       {description && (

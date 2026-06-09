@@ -76,7 +76,7 @@ export default function SearchPage() {
                       <FileText className="h-4 w-4" />
                     </span>
                     <div className="min-w-0 space-y-1">
-                      <p className="truncate font-display text-[15px] font-medium">
+                      <p className="truncate font-sans text-[15px] font-medium">
                         {note.title ?? 'Untitled note'}
                       </p>
                       {note.summary && (
@@ -84,7 +84,7 @@ export default function SearchPage() {
                           {note.summary}
                         </p>
                       )}
-                      <p className="font-mono text-xs uppercase tracking-[0.1em] text-muted-foreground">
+                      <p className="font-sans text-xs uppercase tracking-[0.1em] text-muted-foreground">
                         {formatDate(note._creationTime)}
                       </p>
                     </div>

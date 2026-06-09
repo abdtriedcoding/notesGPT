@@ -114,7 +114,7 @@ export function ChatPanel({
                       <Link
                         key={id}
                         href={`/recordings/${id}`}
-                        className="inline-flex items-center gap-1 rounded-full border bg-background px-2 py-0.5 font-mono text-[11px] text-muted-foreground transition-colors hover:text-foreground"
+                        className="inline-flex items-center gap-1 rounded-full border bg-background px-2 py-0.5 font-sans text-[11px] text-muted-foreground transition-colors hover:text-foreground"
                       >
                         <FileText className="h-3 w-3" />
                         Source {i + 1}

@@ -188,7 +188,7 @@ export function DataTable<TData, TValue>({
       </div>
 
       <div className="flex items-center justify-between">
-        <p className="font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">
+        <p className="font-sans text-xs uppercase tracking-[0.12em] text-muted-foreground">
           {table.getFilteredRowModel().rows.length} note
           {table.getFilteredRowModel().rows.length === 1 ? '' : 's'}
         </p>

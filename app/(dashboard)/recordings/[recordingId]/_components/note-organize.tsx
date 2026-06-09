@@ -56,7 +56,7 @@ function TagEditor({ noteId, tags }: { noteId: Id<'notes'>; tags: string[] }) {
 
   return (
     <div className="min-w-0 space-y-2">
-      <p className="flex items-center gap-1.5 font-mono text-xs uppercase tracking-[0.12em] text-muted-foreground">
+      <p className="flex items-center gap-1.5 font-sans text-xs uppercase tracking-[0.12em] text-muted-foreground">
         <Tag className="h-3.5 w-3.5" />
         Tags
       </p>

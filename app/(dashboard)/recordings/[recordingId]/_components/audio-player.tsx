@@ -74,7 +74,7 @@ export const AudioPlayer = forwardRef<HTMLAudioElement, AudioPlayerProps>(
             aria-label="Seek"
             className="h-1.5 w-full cursor-pointer appearance-none rounded-full bg-muted accent-primary"
           />
-          <span className="shrink-0 font-mono text-xs tabular-nums text-muted-foreground">
+          <span className="shrink-0 font-sans text-xs tabular-nums text-muted-foreground">
             {formatDuration(currentTime)} / {formatDuration(duration)}
           </span>
         </div>

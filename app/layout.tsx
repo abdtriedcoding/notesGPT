@@ -1,7 +1,7 @@
 import './globals.css'
 import { Toaster } from 'sonner'
 import { type Metadata } from 'next'
-import { Inter, Fraunces, JetBrains_Mono } from 'next/font/google'
+import { Inter } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/react'
 import { ThemeProvider } from '@/components/theme-provider'
 import { ConvexProvider } from '@/components/providers/convex-provider'
@@ -9,25 +9,14 @@ import { ConvexProvider } from '@/components/providers/convex-provider'
 import Navbar from '@/components/navbar'
 import Footer from '@/components/footer'
 
+// Single typeface for the entire app — clean, premium, and built for screens.
+// Inter powers body, headings, and labels alike; hierarchy comes from weight,
+// size, and letter-spacing rather than from switching font families.
 const fontSans = Inter({
   subsets: ['latin'],
   weight: ['400', '500', '600', '700'],
-  variable: '--font-sans',
-})
-
-// Editorial serif for display headings — high-contrast, with italics for accents.
-const fontDisplay = Fraunces({
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
   style: ['normal', 'italic'],
-  variable: '--font-display',
-})
-
-// Monospace for eyebrows, captions and terminal-style UI.
-const fontMono = JetBrains_Mono({
-  subsets: ['latin'],
-  weight: ['400', '500', '600'],
-  variable: '--font-mono',
+  variable: '--font-sans',
 })
 
 export const metadata: Metadata = {
@@ -92,7 +81,7 @@ export default function RootLayout({
     <ConvexProvider>
       <html
         lang="en"
-        className={`${fontSans.variable} ${fontDisplay.variable} ${fontMono.variable}`}
+        className={fontSans.variable}
       >
         <body className="font-sans antialiased">
           <ThemeProvider

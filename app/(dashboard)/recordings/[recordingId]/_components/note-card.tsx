@@ -52,14 +52,14 @@ export default function NoteCard({
             {source === 'ai' && (
               <Badge
                 variant="secondary"
-                className="shrink-0 gap-1 font-mono text-[10px] uppercase tracking-[0.1em]"
+                className="shrink-0 gap-1 font-sans text-[10px] uppercase tracking-[0.1em]"
               >
                 <Sparkles className="h-3 w-3 text-primary" />
                 AI
               </Badge>
             )}
           </div>
-          <p className="font-mono text-xs uppercase tracking-[0.1em] text-muted-foreground">
+          <p className="font-sans text-xs uppercase tracking-[0.1em] text-muted-foreground">
             {title ? `${title} · ` : ''}
             {formatDate(_creationTime)}
           </p>

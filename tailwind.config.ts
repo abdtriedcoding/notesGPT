@@ -19,10 +19,9 @@ const config = {
     },
     extend: {
       fontFamily: {
+        // One typeface across the whole app: Inter. Hierarchy comes from
+        // weight, size, and letter-spacing — not from switching families.
         sans: ["var(--font-sans)", "ui-sans-serif", "system-ui", "sans-serif"],
-        display: ["var(--font-display)", "ui-serif", "Georgia", "serif"],
-        serif: ["var(--font-display)", "ui-serif", "Georgia", "serif"],
-        mono: ["var(--font-mono)", "ui-monospace", "SFMono-Regular", "monospace"],
       },
       colors: {
         border: "hsl(var(--border))",
