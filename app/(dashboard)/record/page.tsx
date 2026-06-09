@@ -41,11 +41,12 @@ export default function RecordPage() {
     }
 
     recorder.onstop = async () => {
-      const audioBlob = new Blob(audioChunks, { type: 'audio/mp3' })
+      const mimeType = recorder.mimeType || 'audio/webm'
+      const audioBlob = new Blob(audioChunks, { type: mimeType })
       const postUrl = await generateUploadUrl()
       const result = await fetch(postUrl, {
         method: 'POST',
-        headers: { 'Content-Type': 'audio/mp3' },
+        headers: { 'Content-Type': mimeType },
         body: audioBlob,
       })
       const { storageId } = await result.json()

@@ -1,9 +1,9 @@
-;('use node')
+'use node'
 
 import { v } from 'convex/values'
 import { AssemblyAI } from 'assemblyai'
 import { internal } from './_generated/api'
-import { internalAction, internalMutation } from './_generated/server'
+import { internalAction } from './_generated/server'
 
 const client = new AssemblyAI({
   apiKey: process.env.ASSEMBLY_API_KEY!,
@@ -16,32 +16,18 @@ export const doTranscribe = internalAction({
   },
   handler: async (ctx, args) => {
     const { fileUrl, noteId } = args
-    const data = {
+
+    const responce = await client.transcripts.transcribe({
       audio_url: fileUrl,
+      language_code: 'en',
+    })
+
+    if (responce.status === 'error') {
+      console.error('AssemblyAI transcription error:', responce.error)
     }
 
-    const responce = await client.transcripts.transcribe(data)
     const transcript = responce.text || 'error'
-    await ctx.runMutation(internal.assembly.saveTranscript, {
-      noteId,
-      transcript,
-    })
-  },
-})
-
-export const saveTranscript = internalMutation({
-  args: {
-    noteId: v.id('notes'),
-    transcript: v.string(),
-  },
-  handler: async (ctx, args) => {
-    const { noteId, transcript } = args
-
-    await ctx.db.patch(noteId, {
-      transcription: transcript,
-    })
-
-    await ctx.scheduler.runAfter(0, internal.gemini.chat, {
+    await ctx.runMutation(internal.internalMutations.saveTranscript, {
       noteId,
       transcript,
     })
