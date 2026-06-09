@@ -1,8 +1,12 @@
 'use client'
 
-import { Loader2, AlertCircle, ListTodo } from 'lucide-react'
-import { type Doc } from '@/convex/_generated/dataModel'
+import { toast } from 'sonner'
+import { useMutation } from 'convex/react'
+import { Loader2, AlertCircle, ListTodo, RotateCw } from 'lucide-react'
+import { api } from '@/convex/_generated/api'
+import { type Doc, type Id } from '@/convex/_generated/dataModel'
 
+import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { EmptyState } from '@/components/empty-state'
 import NoteCard from '@/app/(dashboard)/recordings/[recordingId]/_components/note-card'
@@ -23,7 +27,24 @@ function ProcessingState({ label }: { label: string }) {
   )
 }
 
-function FailedState() {
+function FailedState({
+  noteId,
+  readOnly,
+}: {
+  noteId: Id<'notes'>
+  readOnly: boolean
+}) {
+  const reprocessNote = useMutation(api.notes.reprocessNote)
+
+  const handleRetry = () => {
+    const promise = reprocessNote({ id: noteId })
+    toast.promise(promise, {
+      loading: 'Restarting processing…',
+      success: 'Processing restarted',
+      error: 'Failed to restart processing',
+    })
+  }
+
   return (
     <div className="flex flex-col items-center justify-center gap-2 rounded-xl border border-destructive/20 bg-destructive/5 py-16 text-center">
       <AlertCircle className="h-6 w-6 text-destructive" />
@@ -34,6 +55,17 @@ function FailedState() {
         The audio may have been too quiet or empty. Try recording again in a
         quiet space.
       </p>
+      {!readOnly && (
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={handleRetry}
+          className="mt-3"
+        >
+          <RotateCw className="mr-2 h-4 w-4" />
+          Retry processing
+        </Button>
+      )}
     </div>
   )
 }
@@ -50,7 +82,7 @@ export default function NoteTabs({
     content: string | undefined,
     processingLabel: string
   ) => {
-    if (isFailed) return <FailedState />
+    if (isFailed) return <FailedState noteId={note._id} readOnly={readOnly} />
     if (isProcessing) return <ProcessingState label={processingLabel} />
     return (
       <div className="rounded-xl border bg-card p-5 shadow-soft sm:p-6">

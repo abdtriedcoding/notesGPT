@@ -88,13 +88,17 @@ export const getNoteById = query({
 })
 
 // Public query for the shareable note page. Intentionally unauthenticated, but
-// only ever invoked from the read-only /share route. Returns null if missing.
+// keyed by an opaque, unguessable shareId (not the raw note id) so notes can't
+// be enumerated. Returns null if the token doesn't resolve.
 export const getSharedNote = query({
   args: {
-    id: v.id('notes'),
+    shareId: v.string(),
   },
-  handler: async (ctx, { id }) => {
-    const note = await ctx.db.get(id)
+  handler: async (ctx, { shareId }) => {
+    const note = await ctx.db
+      .query('notes')
+      .withIndex('by_shareId', (q) => q.eq('shareId', shareId))
+      .unique()
     if (!note) {
       return null
     }
@@ -106,6 +110,79 @@ export const getSharedNote = query({
       .collect()
 
     return { note, actionItems }
+  },
+})
+
+// Generates (or returns the existing) opaque share token for a note. Only the
+// owner can create a link. Returns the shareId for building the public URL.
+export const createShareLink = mutation({
+  args: {
+    id: v.id('notes'),
+  },
+  handler: async (ctx, { id }) => {
+    const identity = await ctx.auth.getUserIdentity()
+    if (!identity) {
+      throw new Error('Not authenticated')
+    }
+
+    const note = await ctx.db.get(id)
+    if (!note) {
+      throw new Error('Note not found')
+    }
+    if (note.userId !== identity.subject) {
+      throw new Error('Not your note')
+    }
+
+    if (note.shareId) {
+      return note.shareId
+    }
+
+    const shareId = crypto.randomUUID()
+    await ctx.db.patch(id, { shareId })
+    return shareId
+  },
+})
+
+// Re-runs the transcription → summarization pipeline for a note (e.g. after a
+// failure). Clears AI-generated action items first so they aren't duplicated;
+// manual items are preserved.
+export const reprocessNote = mutation({
+  args: {
+    id: v.id('notes'),
+  },
+  handler: async (ctx, { id }) => {
+    const identity = await ctx.auth.getUserIdentity()
+    if (!identity) {
+      throw new Error('Not authenticated')
+    }
+
+    const note = await ctx.db.get(id)
+    if (!note) {
+      throw new Error('Note not found')
+    }
+    if (note.userId !== identity.subject) {
+      throw new Error('Not your note')
+    }
+    if (!note.audioFileUrl) {
+      throw new Error('This note has no audio to reprocess')
+    }
+
+    const existing = await ctx.db
+      .query('actionItems')
+      .withIndex('by_noteId', (q) => q.eq('noteId', id))
+      .collect()
+    await Promise.all(
+      existing
+        .filter((item) => item.source === 'ai')
+        .map((item) => ctx.db.delete(item._id))
+    )
+
+    await ctx.db.patch(id, { status: NOTE_STATUS.PROCESSING })
+
+    await ctx.scheduler.runAfter(0, internal.assembly.doTranscribe, {
+      fileUrl: note.audioFileUrl,
+      noteId: id,
+    })
   },
 })
 
@@ -171,6 +248,7 @@ export const createActionItem = mutation({
       userId,
       noteId,
       action,
+      source: 'manual',
     })
     return promise
   },

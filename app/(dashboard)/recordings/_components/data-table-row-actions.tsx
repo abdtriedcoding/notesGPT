@@ -7,7 +7,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { Ellipsis, Pencil, Share2, Trash2 } from 'lucide-react'
+import { Ellipsis, Pencil, RotateCw, Share2, Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
 import { toast } from 'sonner'
@@ -21,6 +21,7 @@ import ShareNoteModal from '@/components/share-note-modal'
 export function DataTableRowActions({ id }: { id: Id<'notes'> }) {
   const router = useRouter()
   const removeNote = useMutation(api.notes.removeNote)
+  const reprocessNote = useMutation(api.notes.reprocessNote)
 
   const handleRemoveNote = () => {
     const promise = removeNote({ id })
@@ -28,6 +29,15 @@ export function DataTableRowActions({ id }: { id: Id<'notes'> }) {
       loading: 'Deleting note…',
       success: 'Note deleted',
       error: 'Failed to delete note',
+    })
+  }
+
+  const handleReprocessNote = () => {
+    const promise = reprocessNote({ id })
+    toast.promise(promise, {
+      loading: 'Restarting processing…',
+      success: 'Processing restarted',
+      error: 'Failed to restart processing',
     })
   }
 
@@ -53,6 +63,10 @@ export function DataTableRowActions({ id }: { id: Id<'notes'> }) {
             Share
           </DropdownMenuItem>
         </ShareNoteModal>
+        <DropdownMenuItem onClick={handleReprocessNote}>
+          <RotateCw className="mr-2 h-4 w-4" />
+          Reprocess
+        </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DeleteModal onConfirm={handleRemoveNote}>
           <DropdownMenuItem

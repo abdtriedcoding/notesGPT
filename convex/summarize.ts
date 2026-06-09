@@ -4,12 +4,28 @@ import { v } from 'convex/values'
 import Groq from 'groq-sdk'
 import { internal } from './_generated/api'
 import { requireEnv } from './env'
-import { SUMMARY_MODEL, SUMMARY_SYSTEM_PROMPT } from './constants'
+import {
+  MAX_ACTION_ITEMS,
+  SUMMARY_MODEL,
+  SUMMARY_SYSTEM_PROMPT,
+} from './constants'
 import { internalAction } from './_generated/server'
 
 interface TranscriptSummary {
   title: string
   summary: string
+  actionItems: string[]
+}
+
+// Defensively coerce the model's actionItems field into a clean string[]:
+// guard the type, trim, drop blanks, dedupe, and cap the length.
+function parseActionItems(value: unknown): string[] {
+  if (!Array.isArray(value)) return []
+  const cleaned = value
+    .filter((item): item is string => typeof item === 'string')
+    .map((item) => item.trim())
+    .filter((item) => item.length > 0)
+  return [...new Set(cleaned)].slice(0, MAX_ACTION_ITEMS)
 }
 
 export const chat = internalAction({
@@ -39,6 +55,7 @@ export const chat = internalAction({
         noteId,
         title: data.title?.trim() || 'Untitled note',
         summary: data.summary?.trim() || 'No summary available.',
+        actionItems: parseActionItems(data.actionItems),
       })
     } catch (error) {
       console.error('Summarization failed:', error)

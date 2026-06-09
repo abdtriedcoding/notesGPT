@@ -27,14 +27,42 @@ export const saveSummary = internalMutation({
     noteId: v.id('notes'),
     summary: v.string(),
     title: v.string(),
+    actionItems: v.array(v.string()),
   },
   handler: async (ctx, args) => {
-    const { noteId, summary, title } = args
+    const { noteId, summary, title, actionItems } = args
+
+    const note = await ctx.db.get(noteId)
+    if (!note) return
+
     await ctx.db.patch(noteId, {
       summary,
       title,
       status: NOTE_STATUS.READY,
     })
+
+    // Clear any previously AI-generated items (e.g. on reprocess) so we don't
+    // duplicate them. Manually added items are left untouched.
+    const existing = await ctx.db
+      .query('actionItems')
+      .withIndex('by_noteId', (q) => q.eq('noteId', noteId))
+      .collect()
+    await Promise.all(
+      existing
+        .filter((item) => item.source === 'ai')
+        .map((item) => ctx.db.delete(item._id))
+    )
+
+    await Promise.all(
+      actionItems.map((action) =>
+        ctx.db.insert('actionItems', {
+          noteId,
+          userId: note.userId,
+          action,
+          source: 'ai',
+        })
+      )
+    )
   },
 })
 
