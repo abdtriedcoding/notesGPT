@@ -31,7 +31,7 @@ export default function MarketingPage() {
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-primary opacity-75" />
               <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-primary" />
             </span>
-            <span className="font-mono text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground">
+            <span className="font-sans text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground">
               AI voice notes
             </span>
           </span>
@@ -82,7 +82,7 @@ export default function MarketingPage() {
           </div>
 
           <p
-            className="mt-5 animate-fade-up font-mono text-xs uppercase tracking-[0.15em] text-muted-foreground opacity-0"
+            className="mt-5 animate-fade-up font-sans text-xs uppercase tracking-[0.15em] text-muted-foreground opacity-0"
             style={{ animationDelay: '0.45s', animationFillMode: 'forwards' }}
           >
             Free forever · No credit card · Open source
@@ -98,7 +98,7 @@ export default function MarketingPage() {
                 <span className="h-3 w-3 rounded-full bg-destructive/50" />
                 <span className="h-3 w-3 rounded-full bg-warning/60" />
                 <span className="h-3 w-3 rounded-full bg-success/50" />
-                <span className="ml-3 font-mono text-xs text-muted-foreground">
+                <span className="ml-3 font-sans text-xs text-muted-foreground">
                   notesgpt — dashboard
                 </span>
               </div>
@@ -137,7 +137,7 @@ export default function MarketingPage() {
               >
                 <div className="flex items-center justify-between">
                   <step.icon className="h-5 w-5 text-primary" />
-                  <span className="font-mono text-xs text-muted-foreground">
+                  <span className="font-sans text-xs text-muted-foreground">
                     {step.step}
                   </span>
                 </div>

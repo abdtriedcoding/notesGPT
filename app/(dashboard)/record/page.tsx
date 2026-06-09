@@ -143,13 +143,13 @@ export default function RecordPage() {
       <h1 className="text-3xl font-medium tracking-tight sm:text-4xl">
         {STATE_LABEL[state]}
       </h1>
-      <p className="mt-2 font-mono text-xs uppercase tracking-[0.15em] text-muted-foreground">
+      <p className="mt-2 font-sans text-xs uppercase tracking-[0.15em] text-muted-foreground">
         {getCurrentFormattedDate()}
       </p>
 
       {state === 'idle' && (
         <div className="mt-8 w-full max-w-xs space-y-1.5">
-          <label className="font-mono text-xs uppercase tracking-[0.15em] text-muted-foreground">
+          <label className="font-sans text-xs uppercase tracking-[0.15em] text-muted-foreground">
             Summary style
           </label>
           <Select
@@ -181,7 +181,7 @@ export default function RecordPage() {
             }`}
           />
           <div className="absolute flex h-[88%] w-[88%] items-center justify-center rounded-full bg-background">
-            <span className="font-mono text-5xl font-semibold tabular-nums sm:text-6xl">
+            <span className="font-sans text-5xl font-semibold tabular-nums sm:text-6xl">
               {formatTime(Math.floor(totalSeconds / 60))}:
               {formatTime(totalSeconds % 60)}
             </span>

@@ -74,7 +74,7 @@ export default function RecordingIdPage() {
             <div className="flex flex-wrap items-center gap-2">
               <StatusBadge status={status} />
               {note.language && (
-                <Badge variant="outline" className="font-mono uppercase">
+                <Badge variant="outline" className="font-sans uppercase">
                   {note.language}
                 </Badge>
               )}

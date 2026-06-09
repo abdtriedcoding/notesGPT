@@ -133,7 +133,7 @@
   h2,
   h3,
   h4 {
-    @apply font-display tracking-tight;
+    @apply font-sans tracking-tight;
     font-feature-settings: 'ss01' 1;
   }
   ::selection {
@@ -148,7 +148,7 @@
 
   /* Editorial eyebrow — uppercase mono label */
   .eyebrow {
-    @apply font-mono text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground;
+    @apply font-sans text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground;
   }
 
   /* Subtle blueprint grid background */

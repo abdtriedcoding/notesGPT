@@ -32,7 +32,7 @@ function SortableHeader({
   return (
     <Button
       variant="ghost"
-      className="-ml-3 h-8 font-mono text-xs font-medium uppercase tracking-[0.15em] text-muted-foreground hover:text-foreground data-[state=open]:bg-accent"
+      className="-ml-3 h-8 font-sans text-xs font-medium uppercase tracking-[0.15em] text-muted-foreground hover:text-foreground data-[state=open]:bg-accent"
       onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
     >
       {title}
@@ -43,7 +43,7 @@ function SortableHeader({
 
 function HeaderLabel({ children }: { children: React.ReactNode }) {
   return (
-    <span className="font-mono text-xs font-medium uppercase tracking-[0.15em] text-muted-foreground">
+    <span className="font-sans text-xs font-medium uppercase tracking-[0.15em] text-muted-foreground">
       {children}
     </span>
   )
@@ -56,7 +56,7 @@ export const columns: ColumnDef<NoteRow>[] = [
     cell: ({ row }) => {
       const title = row.original.title
       return (
-        <span className="block max-w-[420px] truncate font-display text-[15px] font-medium tracking-tight">
+        <span className="block max-w-[420px] truncate font-sans text-[15px] font-medium tracking-tight">
           {title ?? <span className="text-muted-foreground">Processing…</span>}
         </span>
       )
@@ -82,7 +82,7 @@ export const columns: ColumnDef<NoteRow>[] = [
             <Badge
               key={tag}
               variant="secondary"
-              className="font-mono text-[10px] uppercase tracking-[0.08em]"
+              className="font-sans text-[10px] uppercase tracking-[0.08em]"
             >
               {tag}
             </Badge>
@@ -108,7 +108,7 @@ export const columns: ColumnDef<NoteRow>[] = [
     accessorKey: '_creationTime',
     header: ({ column }) => <SortableHeader column={column} title="Date" />,
     cell: ({ row }) => (
-      <span className="font-mono text-xs text-muted-foreground">
+      <span className="font-sans text-xs text-muted-foreground">
         {formatDate(row.getValue('_creationTime'))}
       </span>
     ),

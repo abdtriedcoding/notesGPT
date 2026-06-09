@@ -35,7 +35,7 @@ export function Logo({ className, href = '/', showWordmark = true }: LogoProps) 
     >
       <LogoMark />
       {showWordmark && (
-        <span className="font-display text-xl font-semibold tracking-tight">
+        <span className="font-sans text-xl font-semibold tracking-tight">
           NotesGPT
         </span>
       )}

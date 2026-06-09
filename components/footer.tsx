@@ -30,7 +30,7 @@ export default function Footer() {
               GitHub
             </a>
           </nav>
-          <p className="font-mono text-xs uppercase tracking-[0.15em] text-muted-foreground">
+          <p className="font-sans text-xs uppercase tracking-[0.15em] text-muted-foreground">
             © 2026 NotesGPT · Open source
           </p>
         </div>

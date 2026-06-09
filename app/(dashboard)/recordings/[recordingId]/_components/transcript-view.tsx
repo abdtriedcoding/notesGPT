@@ -69,13 +69,13 @@ export function TranscriptView({ utterances, audioRef }: TranscriptViewProps) {
             <div className="flex w-16 shrink-0 flex-col items-start gap-1">
               <span
                 className={cn(
-                  'rounded-full px-2 py-0.5 font-mono text-[11px] font-medium uppercase tracking-wide',
+                  'rounded-full px-2 py-0.5 font-sans text-[11px] font-medium uppercase tracking-wide',
                   speakerColor(u.speaker)
                 )}
               >
                 {u.speaker}
               </span>
-              <span className="font-mono text-[11px] tabular-nums text-muted-foreground">
+              <span className="font-sans text-[11px] tabular-nums text-muted-foreground">
                 {formatDuration(u.start / 1000)}
               </span>
             </div>
