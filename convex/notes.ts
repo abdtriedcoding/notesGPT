@@ -7,11 +7,21 @@ export const generateUploadUrl = mutation(async (ctx) => {
   return await ctx.storage.generateUploadUrl()
 })
 
+const templateValidator = v.union(
+  v.literal('default'),
+  v.literal('meeting'),
+  v.literal('lecture'),
+  v.literal('journal'),
+  v.literal('email'),
+  v.literal('blog')
+)
+
 export const createNote = mutation({
   args: {
     storageId: v.id('_storage'),
+    template: v.optional(templateValidator),
   },
-  handler: async (ctx, { storageId }) => {
+  handler: async (ctx, { storageId, template }) => {
     const identity = await ctx.auth.getUserIdentity()
     if (!identity) {
       throw new Error('Not authenticated')
@@ -29,6 +39,7 @@ export const createNote = mutation({
       audioFileId: storageId,
       audioFileUrl: fileUrl,
       status: NOTE_STATUS.PROCESSING,
+      template,
     })
 
     await ctx.scheduler.runAfter(0, internal.assembly.doTranscribe, {
@@ -149,8 +160,10 @@ export const createShareLink = mutation({
 export const reprocessNote = mutation({
   args: {
     id: v.id('notes'),
+    // Optionally re-summarize with a different template.
+    template: v.optional(templateValidator),
   },
-  handler: async (ctx, { id }) => {
+  handler: async (ctx, { id, template }) => {
     const identity = await ctx.auth.getUserIdentity()
     if (!identity) {
       throw new Error('Not authenticated')
@@ -177,7 +190,10 @@ export const reprocessNote = mutation({
         .map((item) => ctx.db.delete(item._id))
     )
 
-    await ctx.db.patch(id, { status: NOTE_STATUS.PROCESSING })
+    await ctx.db.patch(id, {
+      status: NOTE_STATUS.PROCESSING,
+      ...(template ? { template } : {}),
+    })
 
     await ctx.scheduler.runAfter(0, internal.assembly.doTranscribe, {
       fileUrl: note.audioFileUrl,

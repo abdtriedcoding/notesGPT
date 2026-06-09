@@ -1,20 +1,33 @@
 import { v } from 'convex/values'
 import { internal } from './_generated/api'
 import { NOTE_STATUS, buildSearchBlob } from './constants'
-import { internalMutation } from './_generated/server'
+import { internalMutation, internalQuery } from './_generated/server'
 
 export const saveTranscript = internalMutation({
   args: {
     noteId: v.id('notes'),
     transcript: v.string(),
+    utterances: v.optional(
+      v.array(
+        v.object({
+          speaker: v.string(),
+          text: v.string(),
+          start: v.number(),
+          end: v.number(),
+        })
+      )
+    ),
+    language: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
-    const { noteId, transcript } = args
+    const { noteId, transcript, utterances, language } = args
 
     const note = await ctx.db.get(noteId)
 
     await ctx.db.patch(noteId, {
       transcription: transcript,
+      utterances,
+      language,
       searchBlob: buildSearchBlob({
         title: note?.title,
         summary: note?.summary,
@@ -26,6 +39,19 @@ export const saveTranscript = internalMutation({
       noteId,
       transcript,
     })
+  },
+})
+
+// Read-only helper for the summarization action (a Node action can't touch the
+// db directly) to learn which template/language a note should be summarized as.
+export const getNoteMeta = internalQuery({
+  args: {
+    noteId: v.id('notes'),
+  },
+  handler: async (ctx, { noteId }) => {
+    const note = await ctx.db.get(noteId)
+    if (!note) return null
+    return { template: note.template, language: note.language }
   },
 })
 

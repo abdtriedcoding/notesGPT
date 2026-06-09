@@ -3,11 +3,24 @@
 import { toast } from 'sonner'
 import { useEffect, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Loader2, Mic, Square } from 'lucide-react'
+import { Loader2, Mic, Square, Upload } from 'lucide-react'
 import { formatTime, getCurrentFormattedDate } from '@/lib/utils'
 
 import { useMutation } from 'convex/react'
 import { api } from '@/convex/_generated/api'
+import {
+  NOTE_TEMPLATES,
+  TEMPLATE_OPTIONS,
+  type NoteTemplate,
+} from '@/convex/constants'
+
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 
 type RecordState = 'idle' | 'recording' | 'uploading'
 
@@ -21,7 +34,9 @@ export default function RecordPage() {
   const router = useRouter()
   const [state, setState] = useState<RecordState>('idle')
   const [totalSeconds, setTotalSeconds] = useState(0)
+  const [template, setTemplate] = useState<NoteTemplate>('default')
   const mediaRecorderRef = useRef<MediaRecorder | null>(null)
+  const fileInputRef = useRef<HTMLInputElement | null>(null)
 
   const generateUploadUrl = useMutation(api.notes.generateUploadUrl)
   const createNote = useMutation(api.notes.createNote)
@@ -59,7 +74,7 @@ export default function RecordPage() {
             throw new Error('Upload failed. Please try again.')
           }
           const { storageId } = await result.json()
-          const noteId = await createNote({ storageId })
+          const noteId = await createNote({ storageId, template })
           router.push(`/recordings/${noteId}`)
         } catch (error) {
           setState('idle')
@@ -87,6 +102,37 @@ export default function RecordPage() {
     mediaRecorderRef.current?.stop()
   }
 
+  // Upload an existing audio or video file instead of recording live. Reuses
+  // the same storage-upload → createNote path as a recording.
+  async function handleFileUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0]
+    e.target.value = '' // allow re-selecting the same file later
+    if (!file) return
+
+    setState('uploading')
+    try {
+      const postUrl = await generateUploadUrl()
+      const result = await fetch(postUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': file.type || 'application/octet-stream' },
+        body: file,
+      })
+      if (!result.ok) {
+        throw new Error('Upload failed. Please try again.')
+      }
+      const { storageId } = await result.json()
+      const noteId = await createNote({ storageId, template })
+      router.push(`/recordings/${noteId}`)
+    } catch (error) {
+      setState('idle')
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : 'Something went wrong uploading your file.'
+      )
+    }
+  }
+
   const handleClick = () => {
     if (state === 'idle') void startRecording()
     else if (state === 'recording') stopRecording()
@@ -100,6 +146,32 @@ export default function RecordPage() {
       <p className="mt-2 font-mono text-xs uppercase tracking-[0.15em] text-muted-foreground">
         {getCurrentFormattedDate()}
       </p>
+
+      {state === 'idle' && (
+        <div className="mt-8 w-full max-w-xs space-y-1.5">
+          <label className="font-mono text-xs uppercase tracking-[0.15em] text-muted-foreground">
+            Summary style
+          </label>
+          <Select
+            value={template}
+            onValueChange={(v) => setTemplate(v as NoteTemplate)}
+          >
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {NOTE_TEMPLATES.map((t) => (
+                <SelectItem key={t} value={t}>
+                  {TEMPLATE_OPTIONS[t].label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          <p className="text-xs text-muted-foreground">
+            {TEMPLATE_OPTIONS[template].description}
+          </p>
+        </div>
+      )}
 
       <div className="py-16">
         <div className="relative mx-auto flex h-[280px] w-[280px] items-center justify-center sm:h-[316px] sm:w-[316px]">
@@ -135,6 +207,26 @@ export default function RecordPage() {
         {state === 'recording' && 'Tap again to stop and transcribe'}
         {state === 'uploading' && 'Hang tight, this only takes a moment'}
       </p>
+
+      {state === 'idle' && (
+        <div className="mt-8 flex flex-col items-center gap-2">
+          <button
+            type="button"
+            onClick={() => fileInputRef.current?.click()}
+            className="inline-flex items-center gap-2 rounded-full border bg-card px-4 py-2 text-sm font-medium shadow-soft transition-colors hover:border-primary/30 hover:text-primary"
+          >
+            <Upload className="h-4 w-4" />
+            Upload an audio or video file
+          </button>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="audio/*,video/*"
+            onChange={handleFileUpload}
+            className="hidden"
+          />
+        </div>
+      )}
     </div>
   )
 }

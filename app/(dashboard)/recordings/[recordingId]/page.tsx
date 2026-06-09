@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { useRef } from 'react'
 import { useQuery } from 'convex/react'
 import { notFound, useParams } from 'next/navigation'
 import { ChevronLeft } from 'lucide-react'
@@ -8,16 +9,19 @@ import { api } from '@/convex/_generated/api'
 import { type Id } from '@/convex/_generated/dataModel'
 
 import NoteTabs from '@/components/note-tabs'
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { StatusBadge } from '@/components/status-badge'
 import { ActionItemSkeleton } from '@/components/skeletons'
 import ShareNoteModal from '@/components/share-note-modal'
 import { AudioPlayer } from './_components/audio-player'
 import { EditableField } from './_components/editable-field'
+import { TemplateMenu } from './_components/template-menu'
 
 export default function RecordingIdPage() {
   const params = useParams()
   const recordingId = params.recordingId as Id<'notes'>
+  const audioRef = useRef<HTMLAudioElement>(null)
 
   const noteWithActionItems = useQuery(api.notes.getNoteById, {
     id: recordingId,
@@ -63,18 +67,31 @@ export default function RecordingIdPage() {
             placeholder="Untitled note"
             className="text-3xl font-medium tracking-tight sm:text-4xl"
           />
-          <StatusBadge status={status} />
+          <div className="flex flex-wrap items-center gap-2">
+            <StatusBadge status={status} />
+            {note.language && (
+              <Badge variant="outline" className="font-mono uppercase">
+                {note.language}
+              </Badge>
+            )}
+          </div>
         </div>
         <ShareNoteModal noteId={note._id} />
       </div>
 
       {note.audioFileUrl && (
-        <div className="mb-8">
-          <AudioPlayer src={note.audioFileUrl} />
+        <div className="mb-6">
+          <AudioPlayer ref={audioRef} src={note.audioFileUrl} />
         </div>
       )}
 
-      <NoteTabs note={note} actionItems={actionItems} />
+      {status === 'ready' && (
+        <div className="mb-8 flex items-center justify-end">
+          <TemplateMenu noteId={note._id} current={note.template ?? 'default'} />
+        </div>
+      )}
+
+      <NoteTabs note={note} actionItems={actionItems} audioRef={audioRef} />
     </div>
   )
 }
