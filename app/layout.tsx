@@ -1,7 +1,7 @@
 import './globals.css'
 import { Toaster } from 'sonner'
 import { type Metadata } from 'next'
-import { Poppins } from 'next/font/google'
+import { Inter, Fraunces, JetBrains_Mono } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/react'
 import { ThemeProvider } from '@/components/theme-provider'
 import { ConvexProvider } from '@/components/providers/convex-provider'
@@ -9,12 +9,31 @@ import { ConvexProvider } from '@/components/providers/convex-provider'
 import Navbar from '@/components/navbar'
 import Footer from '@/components/footer'
 
-const font = Poppins({ subsets: ['latin'], weight: ['500'] })
+const fontSans = Inter({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-sans',
+})
+
+// Editorial serif for display headings — high-contrast, with italics for accents.
+const fontDisplay = Fraunces({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  style: ['normal', 'italic'],
+  variable: '--font-display',
+})
+
+// Monospace for eyebrows, captions and terminal-style UI.
+const fontMono = JetBrains_Mono({
+  subsets: ['latin'],
+  weight: ['400', '500', '600'],
+  variable: '--font-mono',
+})
 
 export const metadata: Metadata = {
   title: {
     default: 'NotesGPT',
-    template: `%s - "NotesGPT`,
+    template: `%s — NotesGPT`,
   },
   metadataBase: new URL('https://notessgpt.vercel.app'),
   description:
@@ -71,8 +90,11 @@ export default function RootLayout({
 }>) {
   return (
     <ConvexProvider>
-      <html lang="en">
-        <body className={font.className}>
+      <html
+        lang="en"
+        className={`${fontSans.variable} ${fontDisplay.variable} ${fontMono.variable}`}
+      >
+        <body className="font-sans antialiased">
           <ThemeProvider
             attribute="class"
             defaultTheme="system"
@@ -80,7 +102,7 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             <Navbar />
-            <main className="min-h-screen w-full p-4">
+            <main className="min-h-screen w-full">
               <Toaster theme="system" richColors />
               {children}
               <Analytics />

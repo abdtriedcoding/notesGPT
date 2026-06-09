@@ -2,10 +2,11 @@
 
 import Link from 'next/link'
 import UserNav from './user-nav'
+import { Logo } from '@/components/logo'
 import { navItems } from '@/constants'
 import { usePathname } from 'next/navigation'
 import { Button } from '@/components/ui/button'
-import { Loader, StickyNote } from 'lucide-react'
+import { Loader } from 'lucide-react'
 import { ThemeToggle } from '@/components/theme-toggle'
 import { ClerkLoaded, ClerkLoading, SignInButton, useUser } from '@clerk/nextjs'
 
@@ -16,7 +17,7 @@ export default function Navbar() {
   return (
     <>
       {!pathname.startsWith('/share') && (
-        <nav className="sticky inset-x-0 top-0 z-30 flex h-16 items-center gap-10 border-b bg-background/60 px-4 backdrop-blur-xl transition-all">
+        <nav className="sticky inset-x-0 top-0 z-30 flex h-16 items-center gap-10 border-b bg-background/60 px-4 backdrop-blur-xl transition-all sm:px-6">
           <Logo />
           {pathname !== '/' && (
             <div className="hidden items-center gap-6 md:flex">
@@ -31,7 +32,7 @@ export default function Navbar() {
             ) : (
               <>
                 <ClerkLoading>
-                  <Loader className="w5 h-5 animate-spin" />
+                  <Loader className="h-5 w-5 animate-spin text-muted-foreground" />
                 </ClerkLoading>
                 <ClerkLoaded>
                   <SignInButton
@@ -52,20 +53,11 @@ export default function Navbar() {
   )
 }
 
-function Logo() {
-  return (
-    <Link href="/" className="flex items-center space-x-2">
-      <StickyNote className="h-7 w-7" />
-      <span className="inline-block text-xl font-bold">NotesGPT</span>
-    </Link>
-  )
-}
-
 function NavItem({ title, href }: { title: string; href: string }) {
   return (
     <Link
       href={href}
-      className="text-lg font-medium text-foreground/60 transition-colors hover:text-foreground/80 sm:text-sm"
+      className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
     >
       {title}
     </Link>

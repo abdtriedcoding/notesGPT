@@ -3,9 +3,11 @@
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { Ellipsis } from 'lucide-react'
+import { Ellipsis, Pencil, Share2, Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
 import { toast } from 'sonner'
@@ -13,21 +15,19 @@ import { useMutation } from 'convex/react'
 import { useRouter } from 'next/navigation'
 import { api } from '@/convex/_generated/api'
 import { type Id } from '@/convex/_generated/dataModel'
-import { DeleteModel } from '@/components/delete-model'
-import { ShareChatModel } from '@/components/sharechat-model'
+import { DeleteModal } from '@/components/delete-modal'
+import ShareNoteModal from '@/components/share-note-modal'
 
 export function DataTableRowActions({ id }: { id: Id<'notes'> }) {
   const router = useRouter()
   const removeNote = useMutation(api.notes.removeNote)
 
-  const handelRemoveNote = () => {
-    const promise = removeNote({
-      id,
-    })
+  const handleRemoveNote = () => {
+    const promise = removeNote({ id })
     toast.promise(promise, {
-      loading: 'Deleting Note...',
-      success: 'Note Deleted',
-      error: ' Failed to delete note.',
+      loading: 'Deleting note…',
+      success: 'Note deleted',
+      error: 'Failed to delete note',
     })
   }
 
@@ -42,30 +42,27 @@ export function DataTableRowActions({ id }: { id: Id<'notes'> }) {
           <span className="sr-only">Open menu</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-[160px]">
-        <Button
-          onClick={() => router.push(`/recordings/${id}`)}
-          variant={'outline'}
-          className="w-full justify-start border-none px-2 py-1 text-start text-sm"
-        >
-          Edit
-        </Button>
-        <ShareChatModel id={id}>
-          <Button
-            variant={'outline'}
-            className="w-full justify-start border-none px-2 py-1 text-start text-sm"
-          >
+      <DropdownMenuContent align="end" className="w-[170px]">
+        <DropdownMenuItem onClick={() => router.push(`/recordings/${id}`)}>
+          <Pencil className="mr-2 h-4 w-4" />
+          Open
+        </DropdownMenuItem>
+        <ShareNoteModal noteId={id}>
+          <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+            <Share2 className="mr-2 h-4 w-4" />
             Share
-          </Button>
-        </ShareChatModel>
-        <DeleteModel onConfirm={handelRemoveNote}>
-          <Button
-            variant={'outline'}
-            className="w-full justify-start border-none px-2 py-1 text-start text-sm text-red-500 hover:text-red-600"
+          </DropdownMenuItem>
+        </ShareNoteModal>
+        <DropdownMenuSeparator />
+        <DeleteModal onConfirm={handleRemoveNote}>
+          <DropdownMenuItem
+            onSelect={(e) => e.preventDefault()}
+            className="text-destructive focus:text-destructive"
           >
+            <Trash2 className="mr-2 h-4 w-4" />
             Delete
-          </Button>
-        </DeleteModel>
+          </DropdownMenuItem>
+        </DeleteModal>
       </DropdownMenuContent>
     </DropdownMenu>
   )

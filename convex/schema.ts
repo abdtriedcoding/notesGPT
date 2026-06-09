@@ -9,6 +9,15 @@ export default defineSchema({
     title: v.optional(v.string()),
     transcription: v.optional(v.string()),
     summary: v.optional(v.string()),
+    // Optional for migration safety: existing rows have no status and are
+    // treated as 'ready' by the UI.
+    status: v.optional(
+      v.union(
+        v.literal('processing'),
+        v.literal('ready'),
+        v.literal('failed')
+      )
+    ),
   }).index('by_userId', ['userId']),
   actionItems: defineTable({
     noteId: v.id('notes'),

@@ -3,9 +3,11 @@
 import Link from 'next/link'
 import { columns } from './columns'
 import { DataTable } from './data-table'
+import { Mic } from 'lucide-react'
 import { type api } from '@/convex/_generated/api'
-import { Mic, PencilLine } from 'lucide-react'
-import { buttonVariants } from '@/components/ui/button'
+import { Button } from '@/components/ui/button'
+import { PageHeader } from '@/components/page-header'
+import { EmptyState } from '@/components/empty-state'
 import { type Preloaded, usePreloadedQuery } from 'convex/react'
 
 export function NotesWrapper(props: {
@@ -14,41 +16,39 @@ export function NotesWrapper(props: {
   const userNotes = usePreloadedQuery(props.preloadedNotes)
 
   return (
-    <>
-      <div className="flex flex-col items-center space-y-2 pb-8">
-        <h2 className="text-2xl font-bold tracking-tight">Welcome back!</h2>
-        <p className="text-muted-foreground">
-          Here&apos;s a list of all your notes!
-        </p>
-      </div>
+    <div className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
+      <PageHeader
+        eyebrow="Library"
+        title="Your recordings"
+        subtitle="Every voice note, transcribed and summarized."
+        action={
+          <Button asChild>
+            <Link href="/record">
+              <Mic className="mr-1.5 h-4 w-4" />
+              New recording
+            </Link>
+          </Button>
+        }
+        className="mb-8"
+      />
       {userNotes.length === 0 ? (
-        <EmptyState />
+        <EmptyState
+          icon={Mic}
+          title="No recordings yet"
+          description="Record your first voice note and watch it turn into a clean summary with action items."
+          action={
+            <Button asChild size="lg">
+              <Link href="/record">
+                <Mic className="mr-1.5 h-4 w-4" />
+                Record a voice note
+              </Link>
+            </Button>
+          }
+          className="mt-6"
+        />
       ) : (
         <DataTable data={userNotes} columns={columns} />
       )}
-    </>
-  )
-}
-
-function EmptyState() {
-  return (
-    <div className="flex flex-col items-center justify-center py-24">
-      <div className="flex flex-col gap-4 lg:flex-row">
-        <Link
-          href="/record"
-          className={buttonVariants({ variant: 'default', size: 'lg' })}
-        >
-          <span>Record a New Voice Note</span>
-          <Mic className="ml-2 h-4 w-4" />
-        </Link>
-        <Link
-          href="/action-items"
-          className={buttonVariants({ variant: 'secondary', size: 'lg' })}
-        >
-          <span>View Action Items</span>
-          <PencilLine className="ml-2 h-4 w-4" />
-        </Link>
-      </div>
     </div>
   )
 }

@@ -1,0 +1,105 @@
+'use client'
+
+import { Loader2, AlertCircle, ListTodo } from 'lucide-react'
+import { type Doc } from '@/convex/_generated/dataModel'
+
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { EmptyState } from '@/components/empty-state'
+import NoteCard from '@/app/(dashboard)/recordings/[recordingId]/_components/note-card'
+import ActionForm from '@/app/(dashboard)/recordings/[recordingId]/_components/action-form'
+
+interface NoteTabsProps {
+  note: Doc<'notes'>
+  actionItems: Doc<'actionItems'>[]
+  readOnly?: boolean
+}
+
+function ProcessingState({ label }: { label: string }) {
+  return (
+    <div className="flex flex-col items-center justify-center gap-3 rounded-xl border border-dashed bg-card/50 py-16 text-center">
+      <Loader2 className="h-6 w-6 animate-spin text-primary" />
+      <p className="text-sm text-muted-foreground">{label}</p>
+    </div>
+  )
+}
+
+function FailedState() {
+  return (
+    <div className="flex flex-col items-center justify-center gap-2 rounded-xl border border-destructive/20 bg-destructive/5 py-16 text-center">
+      <AlertCircle className="h-6 w-6 text-destructive" />
+      <p className="text-sm font-medium text-destructive">
+        We couldn&apos;t process this recording
+      </p>
+      <p className="max-w-xs text-xs text-muted-foreground">
+        The audio may have been too quiet or empty. Try recording again in a
+        quiet space.
+      </p>
+    </div>
+  )
+}
+
+export default function NoteTabs({
+  note,
+  actionItems,
+  readOnly = false,
+}: NoteTabsProps) {
+  const isProcessing = note.status === 'processing'
+  const isFailed = note.status === 'failed'
+
+  const renderContent = (
+    content: string | undefined,
+    processingLabel: string
+  ) => {
+    if (isFailed) return <FailedState />
+    if (isProcessing) return <ProcessingState label={processingLabel} />
+    return (
+      <div className="rounded-xl border bg-card p-5 shadow-soft sm:p-6">
+        <div className="whitespace-pre-wrap text-left text-[15px] leading-relaxed text-foreground/90">
+          {content && content.length > 0 ? content : 'Nothing here yet.'}
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <Tabs defaultValue="transcript" className="w-full">
+      <TabsList className="grid h-11 w-full grid-cols-3 border">
+        <TabsTrigger value="transcript">Transcript</TabsTrigger>
+        <TabsTrigger value="summary">Summary</TabsTrigger>
+        <TabsTrigger value="actionItem">Action Items</TabsTrigger>
+      </TabsList>
+
+      <TabsContent value="transcript" className="mt-6">
+        {renderContent(note.transcription, 'Transcribing your audio…')}
+      </TabsContent>
+
+      <TabsContent value="summary" className="mt-6">
+        {renderContent(note.summary, 'Generating your summary…')}
+      </TabsContent>
+
+      <TabsContent value="actionItem" className="mt-6 space-y-4">
+        {!readOnly && <ActionForm id={note._id} />}
+        {actionItems.length > 0 ? (
+          actionItems.map((item) => (
+            <NoteCard
+              key={item._id}
+              {...item}
+              title={note.title}
+              preview={readOnly}
+            />
+          ))
+        ) : (
+          <EmptyState
+            icon={ListTodo}
+            title="No action items yet"
+            description={
+              readOnly
+                ? 'This note has no action items.'
+                : 'Add tasks from this note above, or let the summary inspire them.'
+            }
+          />
+        )}
+      </TabsContent>
+    </Tabs>
+  )
+}

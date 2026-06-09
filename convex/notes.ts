@@ -1,5 +1,6 @@
 import { v } from 'convex/values'
 import { internal } from './_generated/api'
+import { NOTE_STATUS } from './constants'
 import { mutation, query } from './_generated/server'
 
 export const generateUploadUrl = mutation(async (ctx) => {
@@ -18,12 +19,16 @@ export const createNote = mutation({
 
     const userId = identity.subject
 
-    const fileUrl = (await ctx.storage.getUrl(storageId))!
+    const fileUrl = await ctx.storage.getUrl(storageId)
+    if (!fileUrl) {
+      throw new Error('Could not resolve the uploaded audio file URL')
+    }
 
     const noteId = await ctx.db.insert('notes', {
       userId,
       audioFileId: storageId,
       audioFileUrl: fileUrl,
+      status: NOTE_STATUS.PROCESSING,
     })
 
     await ctx.scheduler.runAfter(0, internal.assembly.doTranscribe, {
@@ -54,32 +59,45 @@ export const getUserNotes = query({
   },
 })
 
-// Currently not a good solution its just a working prototype query. Need to make seprate query for getting particular note from id and getting share note page. Need to add confirm user identity and other edge cases.
+// Private query: returns a note only to its owner. Returns null (rather than
+// throwing) for a missing note or a note owned by someone else, so the UI can
+// render a clean "not found" state.
 export const getNoteById = query({
   args: {
     id: v.id('notes'),
   },
-  handler: async (ctx, args) => {
-    const { id } = args
-    // const identity = await ctx.auth.getUserIdentity()
-    // if (!identity) {
-    //   throw new Error('Not authenticated')
-    // }
-
-    // const userId = identity.subject
-
-    // if (!userId) {
-    //   throw new Error('Not authenticated')
-    // }
-
-    const note = await ctx.db.get(id)
-    if (!note) {
-      throw new Error('Not found')
+  handler: async (ctx, { id }) => {
+    const identity = await ctx.auth.getUserIdentity()
+    if (!identity) {
+      return null
     }
 
-    // if (note.userId !== userId) {
-    //   throw new Error('Unauthorized')
-    // }
+    const note = await ctx.db.get(id)
+    if (!note || note.userId !== identity.subject) {
+      return null
+    }
+
+    const actionItems = await ctx.db
+      .query('actionItems')
+      .withIndex('by_noteId', (q) => q.eq('noteId', note._id))
+      .order('desc')
+      .collect()
+
+    return { note, actionItems }
+  },
+})
+
+// Public query for the shareable note page. Intentionally unauthenticated, but
+// only ever invoked from the read-only /share route. Returns null if missing.
+export const getSharedNote = query({
+  args: {
+    id: v.id('notes'),
+  },
+  handler: async (ctx, { id }) => {
+    const note = await ctx.db.get(id)
+    if (!note) {
+      return null
+    }
 
     const actionItems = await ctx.db
       .query('actionItems')
@@ -173,17 +191,16 @@ export const getActionItems = query({
       .order('desc')
       .collect()
 
-    let modifiedActionItems = []
-    for (let item of actionItems) {
-      const note = await ctx.db.get(item.noteId)
-      if (!note) continue
-      modifiedActionItems.push({
-        ...item,
-        title: note.title,
-      })
-    }
+    // Batch-fetch the parent notes once instead of one query per action item.
+    const noteIds = [...new Set(actionItems.map((item) => item.noteId))]
+    const notes = await Promise.all(noteIds.map((id) => ctx.db.get(id)))
+    const titleByNoteId = new Map(
+      notes.filter((note) => note !== null).map((note) => [note!._id, note!.title])
+    )
 
-    return modifiedActionItems
+    return actionItems
+      .filter((item) => titleByNoteId.has(item.noteId))
+      .map((item) => ({ ...item, title: titleByNoteId.get(item.noteId) }))
   },
 })
 
