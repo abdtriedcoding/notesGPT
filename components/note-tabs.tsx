@@ -6,7 +6,9 @@ import { Loader2, AlertCircle, ListTodo, RotateCw } from 'lucide-react'
 import { api } from '@/convex/_generated/api'
 import { type Doc, type Id } from '@/convex/_generated/dataModel'
 
+import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
+import { ChatPanel } from '@/components/chat-panel'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { EmptyState } from '@/components/empty-state'
 import NoteCard from '@/app/(dashboard)/recordings/[recordingId]/_components/note-card'
@@ -107,10 +109,16 @@ export default function NoteTabs({
 
   return (
     <Tabs defaultValue="transcript" className="w-full">
-      <TabsList className="grid h-11 w-full grid-cols-3 border">
+      <TabsList
+        className={cn(
+          'grid h-11 w-full border',
+          readOnly ? 'grid-cols-3' : 'grid-cols-4'
+        )}
+      >
         <TabsTrigger value="transcript">Transcript</TabsTrigger>
         <TabsTrigger value="summary">Summary</TabsTrigger>
         <TabsTrigger value="actionItem">Action Items</TabsTrigger>
+        {!readOnly && <TabsTrigger value="ask">Ask</TabsTrigger>}
       </TabsList>
 
       <TabsContent value="transcript" className="mt-6">
@@ -148,6 +156,18 @@ export default function NoteTabs({
           />
         )}
       </TabsContent>
+
+      {!readOnly && (
+        <TabsContent value="ask" className="mt-6">
+          <div className="h-[28rem] rounded-xl border bg-card p-4 shadow-soft sm:p-5">
+            <ChatPanel
+              noteId={note._id}
+              placeholder="Ask about this recording…"
+              emptyHint="Ask anything about this recording — what was decided, who said what, key points."
+            />
+          </div>
+        </TabsContent>
+      )}
     </Tabs>
   )
 }

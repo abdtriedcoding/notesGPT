@@ -9,6 +9,9 @@
  */
 
 import type * as assembly from "../assembly.js";
+import type * as backfill from "../backfill.js";
+import type * as chat from "../chat.js";
+import type * as chatAnswer from "../chatAnswer.js";
 import type * as constants from "../constants.js";
 import type * as env from "../env.js";
 import type * as internalMutations from "../internalMutations.js";
@@ -23,6 +26,9 @@ import type {
 
 declare const fullApi: ApiFromModules<{
   assembly: typeof assembly;
+  backfill: typeof backfill;
+  chat: typeof chat;
+  chatAnswer: typeof chatAnswer;
   constants: typeof constants;
   env: typeof env;
   internalMutations: typeof internalMutations;

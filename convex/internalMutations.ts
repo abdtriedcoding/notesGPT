@@ -1,6 +1,6 @@
 import { v } from 'convex/values'
 import { internal } from './_generated/api'
-import { NOTE_STATUS } from './constants'
+import { NOTE_STATUS, buildSearchBlob } from './constants'
 import { internalMutation } from './_generated/server'
 
 export const saveTranscript = internalMutation({
@@ -11,8 +11,15 @@ export const saveTranscript = internalMutation({
   handler: async (ctx, args) => {
     const { noteId, transcript } = args
 
+    const note = await ctx.db.get(noteId)
+
     await ctx.db.patch(noteId, {
       transcription: transcript,
+      searchBlob: buildSearchBlob({
+        title: note?.title,
+        summary: note?.summary,
+        transcription: transcript,
+      }),
     })
 
     await ctx.scheduler.runAfter(0, internal.summarize.chat, {
@@ -39,6 +46,11 @@ export const saveSummary = internalMutation({
       summary,
       title,
       status: NOTE_STATUS.READY,
+      searchBlob: buildSearchBlob({
+        title,
+        summary,
+        transcription: note.transcription,
+      }),
     })
 
     // Clear any previously AI-generated items (e.g. on reprocess) so we don't
