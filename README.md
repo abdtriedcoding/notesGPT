@@ -26,7 +26,7 @@ Key Features:
 
 ### Prerequisites
 
-**You should have Nodejs and Bun installed on your system**
+**You should have Node.js (v18+) installed on your system.**
 
 ### Cloning the repository
 
@@ -37,20 +37,34 @@ git clone https://github.com/abdtriedcoding/notesGPT.git
 ### Install packages
 
 ```shell
-bun i
+npm install
 ```
 
-### Setup .env file taking refrence from .env.example file
+> The repo ships an `.npmrc` with `legacy-peer-deps=true` because a few UI
+> libraries still declare React 18-only peer ranges while the app runs on
+> React 19 (they are runtime-compatible).
+
+### Setup .env file taking reference from .env.example file
 
 ### Setup Convex
 
 ```shell
-bunx convex dev
+npx convex dev
+```
 
+This populates `CONVEX_DEPLOYMENT` and `NEXT_PUBLIC_CONVEX_URL` in your `.env.local`.
+
+### Connect Clerk to Convex
+
+In your Clerk dashboard create a **JWT template named `convex`**, then point your
+Convex deployment at Clerk's issuer domain:
+
+```shell
+npx convex env set CLERK_JWT_ISSUER_DOMAIN https://<your-app>.clerk.accounts.dev
 ```
 
 ### Start the app
 
 ```shell
-bun run dev
+npm run dev
 ```

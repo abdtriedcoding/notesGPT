@@ -13,7 +13,8 @@ export default function ActionForm({ id }: { id: Id<'notes'> }) {
 
   const handleCreateAction = () => {
     if (!input.trim()) {
-      return toast.error('Input is empty')
+      toast.error('Input is empty')
+      return
     }
 
     const promise = createActionItem({

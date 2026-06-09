@@ -1,5 +1,4 @@
 import { twMerge } from 'tailwind-merge'
-import { auth } from '@clerk/nextjs/server'
 import { type ClassValue, clsx } from 'clsx'
 
 export function cn(...inputs: ClassValue[]) {
@@ -21,10 +20,6 @@ export function getCurrentFormattedDate(): string {
 
 export function formatTime(time: number): string {
   return time < 10 ? `0${time}` : `${time}`
-}
-
-export async function getAuthToken() {
-  return (await auth().getToken({ template: 'convex' })) ?? undefined
 }
 
 export function formatDate(timestamp: number) {

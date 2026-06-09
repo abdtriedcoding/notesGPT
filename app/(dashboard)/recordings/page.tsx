@@ -1,4 +1,4 @@
-import { getAuthToken } from '@/lib/utils'
+import { getAuthToken } from '@/lib/auth'
 import { preloadQuery } from 'convex/nextjs'
 import { api } from '@/convex/_generated/api'
 import { NotesWrapper } from './_components/notes-wrapper'
